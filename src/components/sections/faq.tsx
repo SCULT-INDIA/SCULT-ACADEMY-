@@ -1,6 +1,6 @@
 import { Mail, Plus } from "lucide-react";
 import { faqs } from "@/lib/content";
-import { site } from "@/lib/site";
+import { bookingHref, site } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/button";
 import { Accent, SectionHeading } from "@/components/ui/section-heading";
 
@@ -27,12 +27,19 @@ export function Faq() {
               </span>
               <div>
                 <p className="font-display text-lg font-semibold tracking-tight">Talk to an advisor</p>
-                <p className="text-sm text-ink-mute">{site.email}</p>
+                <p className="text-sm text-ink-mute">
+                  {site.email} · {site.phone.display}
+                </p>
               </div>
             </div>
-            <ButtonLink href={`mailto:${site.email}`} variant="outline" size="sm" arrow className="mt-5 w-full">
-              Write to us
-            </ButtonLink>
+            <div className="mt-5 grid gap-2 sm:grid-cols-2">
+              <ButtonLink href={bookingHref()} size="sm" arrow className="w-full">
+                Book a free call
+              </ButtonLink>
+              <ButtonLink href={`mailto:${site.email}`} variant="outline" size="sm" className="w-full">
+                Email us
+              </ButtonLink>
+            </div>
           </div>
         </div>
 

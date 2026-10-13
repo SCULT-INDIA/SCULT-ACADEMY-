@@ -52,13 +52,14 @@ export const sessionTypes: SessionType[] = [
 
 export const learnerRoles = ["Student", "Working professional", "Industry expert", "Enterprise team", "Institution"] as const;
 
-/* Availability, in India Standard Time. Sundays are closed. */
+/* Availability in India Standard Time, matching office hours on scult.in:
+   Mon–Fri 10:00–19:00, Sat 10:00–14:00, Sunday closed. */
 export const BOOKING_TIMEZONE = "Asia/Kolkata";
 export const BOOKING_TZ_LABEL = "India Standard Time (IST)";
 export const IST_OFFSET_MINUTES = 330;
 export const BOOKING_WINDOW_DAYS = 45;
-const OPEN_MINUTE = 10 * 60; // 10:00
-const CLOSE_MINUTE = 19 * 60; // 19:00
+const OPEN_MINUTE = 10 * 60;
+const CLOSE_MINUTE = { weekday: 19 * 60, saturday: 14 * 60 };
 const SLOT_STEP = 30;
 const MIN_LEAD_MINUTES = 60;
 
@@ -84,9 +85,11 @@ export const weekday = (k: DateKey) => new Date(Date.UTC(k.y, k.m, k.d)).getUTCD
 export function slotsFor(date: DateKey, minutes: number, nowMs: number): number[] {
   const { today, minuteOfDay } = istNow(nowMs);
   const offset = dayIndex(date) - dayIndex(today);
-  if (offset < 0 || offset > BOOKING_WINDOW_DAYS || weekday(date) === 0) return [];
+  const day = weekday(date);
+  if (offset < 0 || offset > BOOKING_WINDOW_DAYS || day === 0) return [];
+  const close = day === 6 ? CLOSE_MINUTE.saturday : CLOSE_MINUTE.weekday;
   const slots: number[] = [];
-  for (let t = OPEN_MINUTE; t + minutes <= CLOSE_MINUTE; t += SLOT_STEP) {
+  for (let t = OPEN_MINUTE; t + minutes <= close; t += SLOT_STEP) {
     if (offset === 0 && t < minuteOfDay + MIN_LEAD_MINUTES) continue;
     slots.push(t);
   }

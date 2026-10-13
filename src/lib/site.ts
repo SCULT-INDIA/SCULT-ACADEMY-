@@ -13,11 +13,27 @@ export const site = {
     // wa.me expects the number with country code, digits only
     whatsapp: "919250680738",
   },
+  // Contact details, address, hours and socials mirror scult.in.
+  address: {
+    street: "Paras Tierea, Building 18, Sector 137",
+    locality: "Noida",
+    region: "Uttar Pradesh",
+    postalCode: "201305",
+    country: "IN",
+    display: "Paras Tierea, Building 18, Sector 137, Noida, Uttar Pradesh 201305",
+    geo: { lat: 28.507, lng: 77.402 },
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Paras+Tierea+Building+18+Sector+137+Noida+Uttar+Pradesh+201305",
+  },
+  hours: [
+    { days: "Mon – Fri", open: "10:00", close: "19:00", label: "10 AM – 7 PM" },
+    { days: "Saturday", open: "10:00", close: "14:00", label: "10 AM – 2 PM" },
+  ],
+  parent: { name: "Scult", url: "https://scult.in" },
   socials: {
-    linkedin: "https://www.linkedin.com/",
-    x: "https://x.com/",
-    instagram: "https://www.instagram.com/",
-    youtube: "https://www.youtube.com/",
+    linkedin: "https://www.linkedin.com/company/scult-india/",
+    instagram: "https://www.instagram.com/scult.in/",
+    x: "https://x.com/scult_india",
   },
 } as const;
 

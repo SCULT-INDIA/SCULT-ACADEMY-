@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { LOGO_ORANGE, MARK_VIEWBOX, PETAL_H, PETAL_V } from "@/components/ui/logo";
 
 export const alt = "Scult Academy — Sculpt your edge in the age of AI";
 export const size = { width: 1200, height: 630 };
@@ -22,15 +23,11 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <svg width="72" height="72" viewBox="0 0 40 40" fill="none">
-            <rect width="40" height="40" rx="12" fill="#cd4a12" />
-            <path
-              d="M26.5 13.2c-1.3-2-3.6-3.2-6.3-3.2-3.8 0-6.4 2.1-6.4 5 0 6.6 13.3 3.6 13.3 10.5 0 3.2-2.9 5.5-7 5.5-3 0-5.6-1.3-7-3.6"
-              stroke="#fff"
-              strokeWidth="3.6"
-              strokeLinecap="round"
-            />
-            <circle cx="31.4" cy="8.6" r="2.6" fill="#f6c244" />
+          <svg width="64" height="72" viewBox={MARK_VIEWBOX}>
+            <path d={PETAL_H} fill={LOGO_ORANGE} />
+            <path d={PETAL_V} fill={LOGO_ORANGE} />
+            <path d={PETAL_H} fill={LOGO_ORANGE} transform="rotate(180)" />
+            <path d={PETAL_V} fill={LOGO_ORANGE} transform="rotate(180)" />
           </svg>
           <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
             <span style={{ fontSize: 44, fontWeight: 800, letterSpacing: -2 }}>Scult</span>

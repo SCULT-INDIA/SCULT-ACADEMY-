@@ -53,8 +53,8 @@ export function ButtonLink({
     </>
   );
 
-  // Client-side navigation for routes; plain anchors for hashes, mailto: and external links.
-  if (href.startsWith("/") && !href.startsWith("/#")) {
+  // Client-side navigation for internal paths; plain anchors for #hash, mailto: and external links.
+  if (href.startsWith("/")) {
     return (
       <Link href={href} className={classes} {...props}>
         {content}

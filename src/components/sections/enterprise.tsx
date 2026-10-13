@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { enterpriseFeatures, stats } from "@/lib/content";
+import { bookingHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/button";
 import { CountUp } from "@/components/ui/count-up";
@@ -66,7 +67,7 @@ export function Enterprise() {
                 ))}
               </ul>
               <div className="reveal mt-11 flex flex-col gap-3 sm:flex-row">
-                <ButtonLink href="#contact" arrow size="lg">
+                <ButtonLink href={bookingHref("enterprise")} arrow size="lg">
                   Book a strategy call
                 </ButtonLink>
                 <ButtonLink href="#method" variant="ghost-dark" size="lg">

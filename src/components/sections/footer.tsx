@@ -1,59 +1,92 @@
-import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Clock, Mail, MapPin, Phone } from "lucide-react";
 import { programs } from "@/lib/content";
-import { site } from "@/lib/site";
+import { bookingHref, site, whatsappUrl } from "@/lib/site";
 import { Logo } from "@/components/ui/logo";
-import { InstagramIcon, LinkedInIcon, XIcon, YouTubeIcon } from "@/components/ui/social-icons";
+import { InstagramIcon, LinkedInIcon, WhatsAppIcon, XIcon } from "@/components/ui/social-icons";
 
 const columns = [
   {
     title: "Programs",
-    links: programs.slice(0, 5).map((p) => ({ label: p.title.replace(" & LLM Engineering", ""), href: "#programs" })),
+    links: programs.slice(0, 5).map((p) => ({ label: p.title.replace(" & LLM Engineering", ""), href: "/#programs" })),
   },
   {
     title: "Learn with us",
     links: [
-      { label: "For students", href: "#audiences" },
-      { label: "For professionals", href: "#audiences" },
-      { label: "For industries", href: "#audiences" },
-      { label: "For enterprises", href: "#enterprise" },
-      { label: "Ways to learn", href: "#formats" },
+      { label: "For students", href: "/#audiences" },
+      { label: "For professionals", href: "/#audiences" },
+      { label: "For enterprises", href: "/#enterprise" },
+      { label: "Ways to learn", href: "/#formats" },
+      { label: "Book a free session", href: bookingHref() },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "The Scult method", href: "#method" },
-      { label: "Learner stories", href: "#stories" },
-      { label: "Partner with us", href: `mailto:${site.email}?subject=Partnership` },
-      { label: "Careers", href: `mailto:${site.email}?subject=Careers` },
-      { label: "Contact", href: `mailto:${site.email}` },
+      { label: "The Scult method", href: "/#method" },
+      { label: "Learner stories", href: "/#stories" },
+      { label: "Partner with us", href: bookingHref("partnership") },
+      { label: "Brand assets", href: "/brand" },
+      { label: `${site.parent.name} — parent company`, href: site.parent.url },
     ],
   },
 ];
 
 const socials = [
   { label: "LinkedIn", href: site.socials.linkedin, Icon: LinkedInIcon },
-  { label: "X", href: site.socials.x, Icon: XIcon },
   { label: "Instagram", href: site.socials.instagram, Icon: InstagramIcon },
-  { label: "YouTube", href: site.socials.youtube, Icon: YouTubeIcon },
+  { label: "X", href: site.socials.x, Icon: XIcon },
+  { label: "WhatsApp", href: whatsappUrl(), Icon: WhatsAppIcon },
 ];
+
+const isExternal = (href: string) => href.startsWith("http");
 
 export function Footer() {
   return (
     <footer className="relative overflow-hidden pt-24">
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 md:grid-cols-2 lg:grid-cols-[1.5fr_repeat(3,1fr)]">
+      <div className="mx-auto grid max-w-6xl gap-12 px-5 md:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
         <div className="max-w-sm">
           <Logo />
           <p className="mt-5 leading-relaxed text-ink-soft">
             Sculpting the builders of the AI era — for students, professionals, industries and enterprises.
           </p>
-          <a
-            href={`mailto:${site.email}`}
-            className="group mt-6 inline-flex items-center gap-1.5 font-display text-lg font-semibold tracking-tight text-ink transition-colors hover:text-ember-700"
-          >
-            {site.email}
-            <ArrowUpRight className="size-4 transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
+
+          <ul className="mt-7 space-y-3 text-[0.95rem] text-ink-soft">
+            <li>
+              <a href={`mailto:${site.email}`} className="group flex items-center gap-3 transition-colors hover:text-ink">
+                <Mail className="size-4 shrink-0 text-ember-600" />
+                {site.email}
+              </a>
+            </li>
+            <li>
+              <a href={`tel:${site.phone.tel}`} className="flex items-center gap-3 transition-colors hover:text-ink">
+                <Phone className="size-4 shrink-0 text-ember-600" />
+                {site.phone.display}
+              </a>
+            </li>
+            <li>
+              <a
+                href={site.address.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 transition-colors hover:text-ink"
+              >
+                <MapPin className="mt-1 size-4 shrink-0 text-ember-600" />
+                <address className="not-italic">{site.address.display}</address>
+              </a>
+            </li>
+            <li className="flex items-start gap-3">
+              <Clock className="mt-1 size-4 shrink-0 text-ember-600" />
+              <span>
+                {site.hours.map((h) => (
+                  <span key={h.days} className="block">
+                    {h.days}: {h.label}
+                  </span>
+                ))}
+              </span>
+            </li>
+          </ul>
+
           <ul className="mt-7 flex gap-2">
             {socials.map(({ label, href, Icon }) => (
               <li key={label}>
@@ -61,7 +94,7 @@ export function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Scult Academy on ${label}`}
+                  aria-label={`Scult on ${label}`}
                   className="grid size-10 place-items-center rounded-full border border-line text-ink-soft transition-all duration-300 hover:border-ember-600 hover:bg-ember-600 hover:text-white"
                 >
                   <Icon className="size-4" />
@@ -77,9 +110,21 @@ export function Footer() {
             <ul className="mt-5 space-y-3">
               {col.links.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-[0.95rem] text-ink-soft transition-colors hover:text-ink">
-                    {link.label}
-                  </a>
+                  {isExternal(link.href) ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-1 text-[0.95rem] text-ink-soft transition-colors hover:text-ink"
+                    >
+                      {link.label}
+                      <ArrowUpRight className="size-3.5 opacity-60" />
+                    </a>
+                  ) : (
+                    <Link href={link.href} className="text-[0.95rem] text-ink-soft transition-colors hover:text-ink">
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -88,10 +133,16 @@ export function Footer() {
       </div>
 
       <div className="mx-auto mt-20 flex max-w-6xl flex-col gap-4 border-t border-line px-5 py-8 text-sm text-ink-mute sm:flex-row sm:items-center sm:justify-between">
-        <p>© 2026 {site.name}. All rights reserved.</p>
+        <p>
+          © 2026 {site.name}. A{" "}
+          <a href={site.parent.url} target="_blank" rel="noopener noreferrer" className="font-medium text-ink-soft hover:text-ink">
+            {site.parent.name}
+          </a>{" "}
+          company.
+        </p>
         <p className="flex items-center gap-2">
           <span className="size-1.5 rounded-full bg-ember-500" aria-hidden="true" />
-          Made for the builders of tomorrow.
+          Made in Noida for the builders of tomorrow.
         </p>
       </div>
 

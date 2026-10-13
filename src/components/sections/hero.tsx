@@ -1,4 +1,5 @@
 import { ArrowRight, Check } from "lucide-react";
+import { bookingHref } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/button";
 import { HeroStage } from "./hero-stage";
 
@@ -66,7 +67,7 @@ export function Hero() {
           <ButtonLink href="#programs" size="lg" arrow className="w-full sm:w-auto">
             Explore programs
           </ButtonLink>
-          <ButtonLink href="#enterprise" size="lg" variant="outline" className="w-full sm:w-auto">
+          <ButtonLink href={bookingHref("enterprise")} size="lg" variant="outline" className="w-full sm:w-auto">
             Book a team demo
           </ButtonLink>
         </div>

@@ -14,6 +14,7 @@ import {
   Radio,
   type LucideIcon,
 } from "lucide-react";
+import { bookingHref } from "@/lib/site";
 
 /* ──────────────────────────────────────────────────────────────
    Landing-page content. Copy lives here so marketing edits never
@@ -79,7 +80,7 @@ export const audiences: Audience[] = [
       "Certificates recruiters recognise",
     ],
     formats: ["Weekend cohorts", "Bootcamps", "Campus programs"],
-    cta: { label: "Explore student tracks", href: "#programs" },
+    cta: { label: "Explore student tracks", href: "/#programs" },
     track: {
       name: "AI Foundations Track",
       modules: [
@@ -106,7 +107,7 @@ export const audiences: Audience[] = [
       "Career acceleration and role transitions",
     ],
     formats: ["Evening cohorts", "Masterclasses", "Self-paced"],
-    cta: { label: "See advanced programs", href: "#programs" },
+    cta: { label: "See advanced programs", href: "/#programs" },
     track: {
       name: "LLM Engineering Track",
       modules: [
@@ -133,7 +134,7 @@ export const audiences: Audience[] = [
       "Programs co-built with institutions",
     ],
     formats: ["Industry bootcamps", "Workshops", "Certifications"],
-    cta: { label: "Talk to an industry advisor", href: "#contact" },
+    cta: { label: "Talk to an industry advisor", href: bookingHref("partnership") },
     track: {
       name: "Applied AI for Industry",
       modules: [
@@ -160,7 +161,7 @@ export const audiences: Audience[] = [
       "SSO, LMS and HRIS integrations",
     ],
     formats: ["Private cohorts", "On-site bootcamps", "Learning platform"],
-    cta: { label: "Book a strategy call", href: "#enterprise" },
+    cta: { label: "Book a strategy call", href: bookingHref("enterprise") },
     track: {
       name: "Enterprise AI Readiness",
       modules: [
@@ -175,6 +176,7 @@ export const audiences: Audience[] = [
 ];
 
 export type Program = {
+  slug: string;
   title: string;
   description: string;
   icon: LucideIcon;
@@ -186,6 +188,7 @@ export type Program = {
 
 export const programs: Program[] = [
   {
+    slug: "genai-llm-engineering",
     title: "Generative AI & LLM Engineering",
     description:
       "Build production-grade LLM applications — prompting, retrieval, fine-tuning, evaluation and deployment — on the stack modern AI teams actually use.",
@@ -196,6 +199,7 @@ export const programs: Program[] = [
     tags: ["RAG", "Fine-tuning", "Evals", "Vector DBs"],
   },
   {
+    slug: "ai-agents-automation",
     title: "AI Agents & Automation",
     description:
       "Design tool-using agents and automate real workflows end-to-end, from orchestration to observability.",
@@ -206,6 +210,7 @@ export const programs: Program[] = [
     tags: ["Agents", "MCP", "Workflows"],
   },
   {
+    slug: "ai-foundations",
     title: "AI Foundations",
     description: "Python, data and machine learning — the launchpad for students and first-time builders.",
     icon: Compass,
@@ -215,6 +220,7 @@ export const programs: Program[] = [
     tags: ["Python", "ML basics"],
   },
   {
+    slug: "data-science-ml",
     title: "Data Science & ML",
     description: "From statistics to deployed models — the complete modern machine-learning toolkit.",
     icon: ChartLine,
@@ -224,6 +230,7 @@ export const programs: Program[] = [
     tags: ["Statistics", "MLOps"],
   },
   {
+    slug: "ai-for-leaders",
     title: "AI for Leaders",
     description:
       "Strategy, governance and ROI for executives steering AI transformation across their organisation.",
@@ -234,6 +241,7 @@ export const programs: Program[] = [
     tags: ["Strategy", "Governance", "ROI"],
   },
   {
+    slug: "full-stack-ai-product",
     title: "Full-Stack AI Product Engineering",
     description:
       "Ship AI-native products end-to-end with modern web frameworks, APIs and cloud infrastructure.",
@@ -359,7 +367,7 @@ export const formats = [
       "Community access & peer reviews",
       "Certificate of completion",
     ],
-    cta: { label: "Browse the library", href: "#programs" },
+    cta: { label: "Get started", href: bookingHref("counselling") },
     featured: false,
   },
   {
@@ -372,7 +380,7 @@ export const formats = [
       "Capstone built on an industry brief",
       "Career services & demo day",
     ],
-    cta: { label: "Apply to a cohort", href: "#contact" },
+    cta: { label: "Apply to a cohort", href: bookingHref("counselling") },
     featured: true,
   },
   {
@@ -385,7 +393,7 @@ export const formats = [
       "Skill analytics dashboard",
       "Dedicated success manager",
     ],
-    cta: { label: "Talk to our team", href: "#enterprise" },
+    cta: { label: "Talk to our team", href: bookingHref("enterprise") },
     featured: false,
   },
 ] as const;

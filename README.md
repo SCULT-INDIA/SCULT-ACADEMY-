@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Scult Academy
 
-## Getting Started
+Marketing site for **Scult Academy** — AI and modern-tech education for students, professionals, industries and enterprises.
 
-First, run the development server:
+Built with Next.js 16 (App Router, Cache Components), React 19, TypeScript, Tailwind CSS v4 and Motion.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Script                 | What it does                                              |
+| ---------------------- | --------------------------------------------------------- |
+| `npm run dev`          | Start the dev server on port 3000                         |
+| `npm run build`        | Production build                                          |
+| `npm run lint`         | ESLint                                                    |
+| `npm run brand:assets` | Regenerate every logo size/placement into `public/brand/` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Routes
 
-## Learn More
+- `/` — landing page
+- `/book` — Calendly-style booking (session → date & time → details). Bookings hand off to WhatsApp with every detail pre-filled. Deep-link with `?type=counselling|enterprise|partnership|demo` and `?program=<slug>`.
+- `/brand` — logo variations and downloads
 
-To learn more about Next.js, take a look at the following resources:
+## Where things live
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/lib/site.ts` — contact details, address, office hours, socials, nav links
+- `src/lib/content.ts` — all landing-page copy (programs, audiences, FAQs…)
+- `src/lib/booking.ts` — session types, availability rules (IST office hours) and booking helpers
+- `src/components/ui/logo.tsx` — the logo geometry; `scripts/brand-assets.mjs` mirrors it for exported files
+- `src/app/globals.css` — design tokens (paper, ink, ember orange, sun yellow) and the matte button/grain styles
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Before launch
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Replace the sample figures in `stats` and the sample quotes in `testimonials` (`src/lib/content.ts`) with verified data.
+- Set `NEXT_PUBLIC_SITE_URL` to the production domain.

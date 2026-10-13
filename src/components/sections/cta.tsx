@@ -1,4 +1,4 @@
-import { site } from "@/lib/site";
+import { bookingHref, whatsappUrl } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/button";
 import { Accent } from "@/components/ui/section-heading";
 
@@ -10,19 +10,6 @@ export function Cta() {
           <div className="absolute -top-56 -left-40 size-[640px] rounded-full bg-[radial-gradient(closest-side,rgb(246_194_68/0.55),transparent)] blur-2xl" />
           <div className="absolute -right-40 -bottom-64 size-[640px] rounded-full bg-[radial-gradient(closest-side,rgb(133_48_15/0.55),transparent)] blur-2xl" />
           <div className="bg-dots-dark mask-radial absolute inset-0 opacity-70" />
-          {/* Oversized brand mark */}
-          <svg
-            viewBox="0 0 40 40"
-            fill="none"
-            className="absolute top-1/2 -right-24 hidden size-[34rem] -translate-y-1/2 opacity-[0.1] lg:block"
-          >
-            <path
-              d="M26.5 13.2c-1.3-2-3.6-3.2-6.3-3.2-3.8 0-6.4 2.1-6.4 5 0 6.6 13.3 3.6 13.3 10.5 0 3.2-2.9 5.5-7 5.5-3 0-5.6-1.3-7-3.6"
-              stroke="#fff"
-              strokeWidth="3.6"
-              strokeLinecap="round"
-            />
-          </svg>
         </div>
 
         <div className="mx-auto max-w-5xl px-6 py-24 text-center sm:py-32">
@@ -41,11 +28,18 @@ export function Cta() {
             refuse to be left behind.
           </p>
           <div className="reveal mt-11 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <ButtonLink href="#programs" variant="cream" size="lg" arrow className="w-full sm:w-auto">
-              Start learning today
+            <ButtonLink href={bookingHref()} variant="cream" size="lg" arrow className="w-full sm:w-auto">
+              Book a free session
             </ButtonLink>
-            <ButtonLink href={`mailto:${site.email}`} variant="ghost-dark" size="lg" className="w-full border-white/40 text-white sm:w-auto">
-              Talk to an advisor
+            <ButtonLink
+              href={whatsappUrl("Hi Scult Academy! I'd like to talk to an advisor.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="ghost-dark"
+              size="lg"
+              className="w-full border-white/40 text-white sm:w-auto"
+            >
+              Chat on WhatsApp
             </ButtonLink>
           </div>
         </div>

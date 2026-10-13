@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { ArrowUpRight, Clock, Users } from "lucide-react";
 import { programs, type Program } from "@/lib/content";
+import { bookingHref } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/button";
 import { Accent, SectionHeading } from "@/components/ui/section-heading";
@@ -116,13 +118,13 @@ function ProgramCard({ program, className, wide }: { program: Program; className
             </div>
           )}
         </div>
-        <a
-          href="#contact"
-          aria-label={`Apply to ${program.title}`}
+        <Link
+          href={bookingHref("counselling", program.slug)}
+          aria-label={`Book a counselling session for ${program.title}`}
           className="grid size-10 shrink-0 place-items-center rounded-full border border-line text-ink transition-all duration-500 group-hover:rotate-45 group-hover:border-ink group-hover:bg-ink group-hover:text-cream"
         >
           <ArrowUpRight className="size-4" />
-        </a>
+        </Link>
       </div>
     </Spotlight>
   );
@@ -206,7 +208,7 @@ function FeaturedCard({ program, className }: { program: Program; className?: st
             ))}
           </div>
         </div>
-        <ButtonLink href="#contact" arrow size="sm">
+        <ButtonLink href={bookingHref("counselling", program.slug)} arrow size="sm">
           Apply now
         </ButtonLink>
       </div>

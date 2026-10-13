@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
-import { navLinks } from "@/lib/site";
+import { bookingHref, navLinks } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
@@ -44,32 +45,32 @@ export function Navbar() {
             : "border-transparent bg-transparent",
         )}
       >
-        <a href="#top" aria-label="Scult Academy — back to top" className="rounded-full">
+        <Link href="/" aria-label="Scult Academy — home" className="rounded-full">
           <Logo />
-        </a>
+        </Link>
 
         <ul className="hidden items-center gap-0.5 lg:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
-              <a
+              <Link
                 href={link.href}
                 className="rounded-full px-3.5 py-2 text-[0.9rem] font-medium text-ink-soft transition-colors hover:bg-ink/5 hover:text-ink"
               >
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
 
         <div className="flex items-center gap-2">
-          <a
-            href="#enterprise"
+          <Link
+            href="/#enterprise"
             className="hidden rounded-full px-3 py-2 text-[0.9rem] font-medium text-ink-soft transition-colors hover:text-ink md:inline-flex"
           >
             For teams
-          </a>
-          <ButtonLink href="#programs" size="sm" arrow className="hidden sm:inline-flex">
-            Start learning
+          </Link>
+          <ButtonLink href={bookingHref()} size="sm" arrow className="hidden sm:inline-flex">
+            Book a session
           </ButtonLink>
           <button
             type="button"
@@ -102,22 +103,22 @@ export function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.04 * i + 0.05, duration: 0.3 }}
                 >
-                  <a
+                  <Link
                     href={link.href}
                     onClick={() => setOpen(false)}
                     className="flex items-center justify-between rounded-2xl px-4 py-3.5 font-display text-xl font-medium tracking-tight text-ink transition-colors hover:bg-ink/5"
                   >
                     {link.label}
                     <span className="font-mono text-xs text-ink-mute">0{i + 1}</span>
-                  </a>
+                  </Link>
                 </motion.li>
               ))}
             </ul>
             <div className="mt-2 grid gap-2 border-t border-line p-2 pt-4 sm:grid-cols-2">
-              <ButtonLink href="#programs" arrow onClick={() => setOpen(false)}>
-                Start learning
+              <ButtonLink href={bookingHref()} arrow onClick={() => setOpen(false)}>
+                Book a session
               </ButtonLink>
-              <ButtonLink href="#enterprise" variant="outline" onClick={() => setOpen(false)}>
+              <ButtonLink href="/#enterprise" variant="outline" onClick={() => setOpen(false)}>
                 For teams
               </ButtonLink>
             </div>
