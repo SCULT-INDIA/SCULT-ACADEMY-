@@ -46,7 +46,7 @@ export function Faq() {
         <div className="reveal border-t border-line">
           {faqs.map((f, i) => (
             <details key={f.question} name="faq" open={i === 0} className="faq-item group border-b border-line">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-left font-display text-[1.25rem] font-medium tracking-[-0.02em] text-ink transition-colors hover:text-ember-700 sm:text-[1.4rem]">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-display text-[1.15rem] leading-snug font-medium tracking-[-0.02em] text-ink transition-colors hover:text-ember-700 sm:gap-6 sm:py-6 sm:text-[1.4rem]">
                 {f.question}
                 <span
                   aria-hidden="true"
@@ -55,7 +55,7 @@ export function Faq() {
                   <Plus className="size-4" />
                 </span>
               </summary>
-              <p className="max-w-2xl pr-14 pb-7 text-[1.02rem] leading-relaxed text-ink-soft">{f.answer}</p>
+              <p className="max-w-2xl pb-7 text-[1.02rem] leading-relaxed text-ink-soft sm:pr-14">{f.answer}</p>
             </details>
           ))}
         </div>

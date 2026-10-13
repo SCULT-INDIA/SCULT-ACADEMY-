@@ -29,26 +29,28 @@ export function Formats() {
             <div
               key={f.name}
               className={cn(
-                "reveal relative flex flex-col rounded-[2rem] p-8 sm:p-9",
+                "reveal relative flex flex-col rounded-[2rem] p-6 sm:p-9",
                 f.featured
                   ? "matte bg-ember-600 text-white shadow-[0_40px_80px_-30px_rgb(205_74_18/0.65)] lg:-my-5 lg:py-12"
                   : "border border-line bg-white shadow-[0_20px_50px_-40px_rgb(23_19_15/0.45)]",
               )}
             >
-              {f.featured && (
-                <span className="absolute top-8 right-8 flex items-center gap-1.5 rounded-full bg-sun-400 px-3 py-1 font-mono text-[0.6rem] font-semibold tracking-[0.12em] text-ink uppercase">
-                  <Sparkles className="size-3" /> Most popular
-                </span>
-              )}
-              <p
-                className={cn(
-                  "font-mono text-[0.68rem] font-medium tracking-[0.16em] uppercase",
-                  f.featured ? "text-white/75" : "text-ember-700",
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p
+                  className={cn(
+                    "font-mono text-[0.68rem] font-medium tracking-[0.16em] uppercase",
+                    f.featured ? "text-white/75" : "text-ember-700",
+                  )}
+                >
+                  {f.kicker}
+                </p>
+                {f.featured && (
+                  <span className="flex items-center gap-1.5 rounded-full bg-sun-400 px-3 py-1 font-mono text-[0.6rem] font-semibold tracking-[0.12em] text-ink uppercase">
+                    <Sparkles className="size-3" /> Most popular
+                  </span>
                 )}
-              >
-                {f.kicker}
-              </p>
-              <h3 className="mt-4 font-display text-4xl font-semibold tracking-[-0.035em]">{f.name}</h3>
+              </div>
+              <h3 className="mt-4 font-display text-[2.1rem] font-semibold tracking-[-0.035em] sm:text-4xl">{f.name}</h3>
               <p className={cn("mt-3 leading-relaxed", f.featured ? "text-white/80" : "text-ink-soft")}>
                 {f.description}
               </p>

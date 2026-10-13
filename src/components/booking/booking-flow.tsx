@@ -143,7 +143,7 @@ export function BookingFlow() {
       <div className="grid lg:grid-cols-[19.5rem_minmax(0,1fr)] xl:grid-cols-[22.5rem_minmax(0,1fr)]">
         <Summary session={session} date={date} time={time} />
 
-        <div className="min-w-0 p-6 sm:p-10 lg:p-12">
+        <div className="min-w-0 p-5 sm:p-10 lg:p-12">
           <Stepper current={STEP_INDEX[step]} />
 
           <AnimatePresence mode="wait" initial={false}>
@@ -161,7 +161,7 @@ export function BookingFlow() {
                     title="What would you like to talk about?"
                     lead="Every session is free, one-to-one and with a real Scult advisor — no sales scripts."
                   />
-                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                  <div className="mt-7 grid gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4">
                     {sessionTypes.map((s) => (
                       <SessionCard key={s.id} session={s} onSelect={() => chooseSession(s.id)} />
                     ))}
@@ -222,6 +222,8 @@ export function BookingFlow() {
               )}
             </motion.div>
           </AnimatePresence>
+
+          <DirectContact className="mt-10 lg:hidden" />
         </div>
       </div>
     </div>
@@ -254,37 +256,47 @@ function bookingMessage(session: SessionType, date: DateKey, time: number, f: Fi
 
 function Summary({ session, date, time }: { session: SessionType | null; date: DateKey | null; time: number | null }) {
   return (
-    <aside className="flex flex-col border-b border-line bg-paper-2/70 p-7 sm:p-10 lg:border-r lg:border-b-0 lg:p-8 xl:p-10">
+    <aside className="flex flex-col border-b border-line bg-paper-2/70 p-5 sm:p-8 lg:border-r lg:border-b-0 xl:p-10">
       <div className="flex items-center gap-3">
-        <LogoMark className="size-11" />
+        <LogoMark className="h-9 sm:h-11" />
         <div>
           <p className="font-display text-lg leading-tight font-semibold tracking-tight">Scult Academy</p>
           <p className="font-mono text-[0.62rem] tracking-[0.16em] text-ink-mute uppercase">Advisor sessions</p>
         </div>
       </div>
 
-      <p className="mt-9 font-mono text-[0.68rem] font-medium tracking-[0.16em] text-ember-700 uppercase">
+      <p className="mt-6 font-mono text-[0.68rem] font-medium tracking-[0.16em] text-ember-700 uppercase lg:mt-9">
         {session ? "You're booking" : "Book a free session"}
       </p>
-      <h2 className="mt-3 font-display text-[1.9rem] leading-[1.05] font-semibold tracking-[-0.03em] text-ink sm:text-[2.2rem]">
+      <h2 className="mt-2 font-display text-[1.6rem] leading-[1.05] font-semibold tracking-[-0.03em] text-ink sm:mt-3 sm:text-[2.2rem]">
         {session ? session.title : "Talk to a Scult advisor"}
       </h2>
 
-      <ul className="mt-6 space-y-3.5 text-[0.95rem] text-ink-soft">
+      <ul className="mt-4 flex flex-wrap gap-2 text-sm text-ink-soft lg:mt-6 lg:flex-col lg:gap-3.5 lg:text-[0.95rem]">
         <SummaryRow icon={Clock}>{session ? `${session.minutes} minutes` : "20 – 45 minutes"}</SummaryRow>
-        <SummaryRow icon={Video}>Online call · link shared on WhatsApp</SummaryRow>
-        <SummaryRow icon={Globe}>{BOOKING_TZ_LABEL}</SummaryRow>
+        <SummaryRow icon={Video}>
+          Online call<span className="hidden lg:inline"> · link shared on WhatsApp</span>
+        </SummaryRow>
+        <SummaryRow icon={Globe}>
+          <span className="lg:hidden">IST</span>
+          <span className="hidden lg:inline">{BOOKING_TZ_LABEL}</span>
+        </SummaryRow>
         {session && date && time !== null && (
           <SummaryRow icon={CalendarCheck} highlight>
-            {formatDate(date)}
-            <br />
-            {formatTime(time)} – {formatTime(time + session.minutes)}
+            <span className="lg:hidden">
+              {formatDate(date, "short")} · {formatTime(time)}
+            </span>
+            <span className="hidden lg:inline">
+              {formatDate(date)}
+              <br />
+              {formatTime(time)} – {formatTime(time + session.minutes)}
+            </span>
           </SummaryRow>
         )}
       </ul>
 
       {session && (
-        <div className="mt-8 border-t border-line pt-6">
+        <div className="mt-8 hidden border-t border-line pt-6 lg:block">
           <p className="font-mono text-[0.62rem] tracking-[0.16em] text-ink-mute uppercase">What we&apos;ll cover</p>
           <ol className="mt-4 space-y-2.5">
             {session.agenda.map((item, i) => (
@@ -297,42 +309,55 @@ function Summary({ session, date, time }: { session: SessionType | null; date: D
         </div>
       )}
 
-      <div className="mt-10 space-y-1 border-t border-line pt-6 lg:mt-auto">
-        <p className="mb-3 flex items-start gap-3 text-sm text-ink-soft">
-          <Clock className="mt-0.5 size-4 shrink-0 text-ember-600" />
-          <span>
-            {site.hours.map((h) => (
-              <span key={h.days} className="block">
-                {h.days} · {h.label} IST
-              </span>
-            ))}
-          </span>
-        </p>
-        <a
-          href={whatsappUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-xl py-1.5 text-sm font-medium text-ink-2 transition-colors hover:text-ember-700"
-        >
-          <WhatsAppIcon className="size-4 text-ember-600" />
-          {site.phone.display}
-        </a>
-        <a
-          href={`mailto:${site.email}`}
-          className="flex items-center gap-3 rounded-xl py-1.5 text-sm font-medium text-ink-2 transition-colors hover:text-ember-700"
-        >
-          <Mail className="size-4 text-ember-600" />
-          {site.email}
-        </a>
-      </div>
+      <DirectContact className="mt-10 hidden lg:mt-auto lg:block" />
     </aside>
+  );
+}
+
+function DirectContact({ className }: { className?: string }) {
+  return (
+    <div className={cn("space-y-1 border-t border-line pt-6", className)}>
+      <p className="mb-3 flex items-start gap-3 text-sm text-ink-soft">
+        <Clock className="mt-0.5 size-4 shrink-0 text-ember-600" />
+        <span>
+          {site.hours.map((h) => (
+            <span key={h.days} className="block">
+              {h.days} · {h.label} IST
+            </span>
+          ))}
+        </span>
+      </p>
+      <a
+        href={whatsappUrl()}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-3 rounded-xl py-1.5 text-sm font-medium text-ink-2 transition-colors hover:text-ember-700"
+      >
+        <WhatsAppIcon className="size-4 text-ember-600" />
+        {site.phone.display}
+      </a>
+      <a
+        href={`mailto:${site.email}`}
+        className="flex items-center gap-3 rounded-xl py-1.5 text-sm font-medium text-ink-2 transition-colors hover:text-ember-700"
+      >
+        <Mail className="size-4 text-ember-600" />
+        {site.email}
+      </a>
+    </div>
   );
 }
 
 function SummaryRow({ icon: Icon, highlight, children }: { icon: LucideIcon; highlight?: boolean; children: ReactNode }) {
   return (
-    <li className={cn("flex gap-3", highlight && "font-semibold text-ember-700")}>
-      <Icon className={cn("mt-0.5 size-[18px] shrink-0", highlight ? "text-ember-600" : "text-ink-mute")} />
+    <li
+      className={cn(
+        "flex items-center gap-2 rounded-full border border-line bg-white/70 px-3 py-1.5 lg:items-start lg:gap-3 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0",
+        highlight && "border-ember-200 bg-ember-50 font-semibold text-ember-700",
+      )}
+    >
+      <Icon
+        className={cn("size-4 shrink-0 lg:mt-0.5 lg:size-[18px]", highlight ? "text-ember-600" : "text-ink-mute")}
+      />
       <span>{children}</span>
     </li>
   );
@@ -377,15 +402,15 @@ function StepHeading({
   lead: string;
 }) {
   return (
-    <div className="mt-8">
+    <div className="mt-7 sm:mt-8">
       <h3
         ref={headingRef}
         tabIndex={-1}
-        className="font-display text-[2rem] leading-[1.02] font-semibold tracking-[-0.035em] text-ink outline-none sm:text-[2.75rem]"
+        className="font-display text-[1.75rem] leading-[1.05] font-semibold tracking-[-0.035em] text-ink outline-none sm:text-[2.75rem] sm:leading-[1.02]"
       >
         {title}
       </h3>
-      <p className="mt-3 max-w-xl text-lg leading-relaxed text-ink-soft">{lead}</p>
+      <p className="mt-3 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">{lead}</p>
     </div>
   );
 }
@@ -411,7 +436,7 @@ function SessionCard({ session, onSelect }: { session: SessionType; onSelect: ()
     <button
       type="button"
       onClick={onSelect}
-      className="group flex flex-col rounded-[1.75rem] border border-line bg-paper/50 p-6 text-left transition-[transform,background-color,border-color,box-shadow] duration-500 hover:-translate-y-1 hover:border-ember-300 hover:bg-white hover:shadow-[0_30px_60px_-34px_rgb(205_74_18/0.45)] sm:p-7"
+      className="group flex flex-col rounded-[1.5rem] border border-line bg-paper/50 p-5 text-left sm:rounded-[1.75rem] transition-[transform,background-color,border-color,box-shadow] duration-500 hover:-translate-y-1 hover:border-ember-300 hover:bg-white hover:shadow-[0_30px_60px_-34px_rgb(205_74_18/0.45)] sm:p-7"
     >
       <div className="flex items-start justify-between gap-3">
         <span className="grid size-12 place-items-center rounded-2xl border border-ember-100 bg-ember-50 text-ember-600 transition-colors duration-500 group-hover:border-ember-600 group-hover:bg-ember-600 group-hover:text-white">
@@ -421,7 +446,7 @@ function SessionCard({ session, onSelect }: { session: SessionType; onSelect: ()
           {session.minutes} min
         </span>
       </div>
-      <span className="mt-5 font-display text-[1.45rem] leading-tight font-semibold tracking-[-0.025em] text-ink">
+      <span className="mt-4 font-display text-[1.3rem] leading-tight font-semibold tracking-[-0.025em] text-ink sm:mt-5 sm:text-[1.45rem]">
         {session.title}
       </span>
       <span className="mt-1.5 text-sm font-medium text-ember-700">{session.audience}</span>
@@ -474,7 +499,7 @@ function Scheduler({
   const slots = date ? slotsFor(date, session.minutes, now) : [];
 
   return (
-    <div className="mt-8 grid gap-8 md:grid-cols-[minmax(0,1fr)_15.5rem] md:gap-0">
+    <div className="mt-7 grid gap-8 sm:mt-8 md:grid-cols-[minmax(0,1fr)_15.5rem] md:gap-0">
       {/* Calendar */}
       <div className="md:pr-8">
         <div className="flex items-center justify-between gap-4">
@@ -508,7 +533,7 @@ function Scheduler({
             <span key={d}>{d}</span>
           ))}
         </div>
-        <div className="mt-3 grid grid-cols-7 gap-1.5 sm:gap-2">
+        <div className="mt-3 grid grid-cols-7 gap-1 sm:gap-2">
           {Array.from({ length: lead }, (_, i) => (
             <span key={`blank-${i}`} aria-hidden="true" />
           ))}
@@ -531,7 +556,7 @@ function Scheduler({
                   }
                 }}
                 className={cn(
-                  "relative grid aspect-square place-items-center rounded-full font-display text-lg font-semibold transition-[background-color,color,transform] duration-300 sm:text-xl",
+                  "relative grid aspect-square place-items-center rounded-full font-display text-base font-semibold transition-[background-color,color,transform] duration-300 sm:text-xl",
                   available
                     ? "bg-ember-50 text-ember-700 hover:scale-105 hover:bg-ember-100"
                     : "cursor-not-allowed text-ink-mute/40",
@@ -559,14 +584,14 @@ function Scheduler({
       </div>
 
       {/* Time slots */}
-      <div ref={slotsRef} className="scroll-mt-28 border-line md:border-l md:pl-8">
+      <div ref={slotsRef} className="scroll-mt-28 border-t border-line pt-7 md:border-t-0 md:border-l md:pt-0 md:pl-8">
         {date ? (
           <>
             <p className="font-display text-xl font-semibold tracking-tight text-ink">{formatDate(date, "short")}</p>
             <p className="mt-1 text-sm text-ink-mute">
               {slots.length} {slots.length === 1 ? "slot" : "slots"} available
             </p>
-            <ul className="mt-5 max-h-[27rem] space-y-2.5 overflow-y-auto pr-1 [scrollbar-width:thin]">
+            <ul className="mt-5 space-y-2.5 md:max-h-[27rem] md:overflow-y-auto md:pr-1 md:[scrollbar-width:thin]">
               {slots.map((t) => {
                 const active = time === t;
                 return (
@@ -650,7 +675,7 @@ function DetailsForm({
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }) {
   return (
-    <form noValidate onSubmit={onSubmit} className="mt-8 grid gap-5 sm:grid-cols-2">
+    <form noValidate onSubmit={onSubmit} className="mt-7 grid gap-5 sm:mt-8 sm:grid-cols-2">
       <Field id="name" label="Full name" required error={errors.name}>
         <input
           id="name"
@@ -742,7 +767,7 @@ function DetailsForm({
           <ShieldCheck className="mt-0.5 size-4 shrink-0 text-ember-600" />
           WhatsApp opens with your booking pre-filled — just hit send to confirm.
         </p>
-        <button type="submit" className="btn btn-matte h-14 px-7 text-base">
+        <button type="submit" className="btn btn-matte h-14 w-full px-7 text-base sm:w-auto">
           <WhatsAppIcon className="size-5" />
           Confirm on WhatsApp
         </button>
@@ -817,7 +842,7 @@ function Confirmation({
       <h3
         ref={headingRef}
         tabIndex={-1}
-        className="mt-7 font-display text-[2rem] leading-[1.02] font-semibold tracking-[-0.035em] text-ink outline-none sm:text-[2.75rem]"
+        className="mt-7 font-display text-[1.75rem] leading-[1.05] font-semibold tracking-[-0.035em] text-ink outline-none sm:text-[2.75rem] sm:leading-[1.02]"
       >
         You&apos;re almost booked{firstName ? `, ${firstName}` : ""}!
       </h3>

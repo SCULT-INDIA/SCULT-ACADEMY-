@@ -12,7 +12,7 @@ export function Cta() {
           <div className="bg-dots-dark mask-radial absolute inset-0 opacity-70" />
         </div>
 
-        <div className="mx-auto max-w-5xl px-6 py-24 text-center sm:py-32">
+        <div className="mx-auto max-w-5xl px-5 py-20 text-center sm:px-6 sm:py-32">
           <span className="reveal inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 font-mono text-[0.68rem] font-medium tracking-[0.16em] uppercase">
             <span className="size-1.5 animate-pulse-dot rounded-full bg-sun-300" />
             Next cohorts open now

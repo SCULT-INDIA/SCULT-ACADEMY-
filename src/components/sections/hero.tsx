@@ -30,7 +30,7 @@ export function Hero() {
 
         <h1
           id="hero-title"
-          className="mx-auto mt-8 max-w-5xl font-display text-[clamp(3.1rem,9vw,8rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-ink"
+          className="mx-auto mt-8 max-w-5xl font-display text-[clamp(3.3rem,9vw,8rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-ink"
         >
           <span className="block animate-rise [animation-delay:90ms]">Sculpt your edge</span>
           <span className="block animate-rise [animation-delay:180ms]">
@@ -58,12 +58,12 @@ export function Hero() {
           </span>
         </h1>
 
-        <p className="mx-auto mt-8 max-w-2xl animate-rise text-lg leading-relaxed text-ink-soft [animation-delay:280ms] sm:text-xl">
+        <p className="mx-auto mt-7 max-w-2xl animate-rise text-[1.05rem] leading-relaxed text-ink-soft [animation-delay:280ms] sm:mt-8 sm:text-xl">
           Scult Academy is where students, professionals, industry experts and enterprise teams master AI and the
           technologies redefining work — through live, mentor-led, build-first programs.
         </p>
 
-        <div className="mt-10 flex animate-rise flex-col items-center justify-center gap-3 [animation-delay:360ms] sm:flex-row">
+        <div className="mt-9 flex animate-rise flex-col items-center justify-center gap-3 [animation-delay:360ms] sm:mt-10 sm:flex-row">
           <ButtonLink href="#programs" size="lg" arrow className="w-full sm:w-auto">
             Explore programs
           </ButtonLink>
@@ -72,7 +72,7 @@ export function Hero() {
           </ButtonLink>
         </div>
 
-        <ul className="mt-9 flex animate-rise flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-ink-soft [animation-delay:440ms]">
+        <ul className="mx-auto mt-8 flex w-fit animate-rise flex-col items-start gap-x-6 gap-y-2.5 text-sm text-ink-soft [animation-delay:440ms] sm:mt-9 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
           {assurances.map((item) => (
             <li key={item} className="flex items-center gap-2">
               <span className="grid size-5 place-items-center rounded-full bg-ember-100 text-ember-700">
@@ -84,7 +84,7 @@ export function Hero() {
         </ul>
       </div>
 
-      <div className="mx-auto mt-16 max-w-6xl animate-rise px-3 [animation-delay:520ms] sm:mt-20 sm:px-5">
+      <div className="mx-auto mt-14 max-w-6xl animate-rise px-3 [animation-delay:520ms] sm:mt-20 sm:px-5">
         <HeroStage />
       </div>
     </section>

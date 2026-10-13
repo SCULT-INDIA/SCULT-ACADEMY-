@@ -20,7 +20,7 @@ export function Method() {
             }
             description="Most courses stop at watching. Ours start there. Every program runs on a four-step loop designed to turn knowledge into shipped, provable skill."
           />
-          <div className="reveal mt-10 flex flex-wrap items-center gap-4">
+          <div className="reveal mt-9 flex flex-col items-start gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             <ButtonLink href="#formats" arrow>
               Find your format
             </ButtonLink>
@@ -32,13 +32,13 @@ export function Method() {
           {methodSteps.map((s) => {
             const Icon = s.icon;
             return (
-              <li key={s.step} className="reveal relative grid grid-cols-[3.5rem_1fr] gap-5 pb-10 last:pb-0 sm:gap-7">
-                <span className="relative z-10 grid size-14 place-items-center rounded-full border border-line bg-paper font-mono text-sm font-semibold text-ink shadow-[0_8px_20px_-14px_rgb(23_19_15/0.6)]">
+              <li key={s.step} className="reveal relative grid grid-cols-[2.75rem_1fr] gap-4 pb-6 last:pb-0 sm:grid-cols-[3.5rem_1fr] sm:gap-7 sm:pb-10">
+                <span className="relative z-10 grid size-11 place-items-center rounded-full border border-line bg-paper font-mono text-xs font-semibold text-ink shadow-[0_8px_20px_-14px_rgb(23_19_15/0.6)] sm:size-14 sm:text-sm">
                   {s.step}
                 </span>
-                <div className="group rounded-[1.75rem] border border-line bg-white p-7 transition-[border-color,box-shadow] duration-500 hover:border-ember-200 hover:shadow-[0_30px_60px_-36px_rgb(205_74_18/0.45)] sm:p-8">
+                <div className="group rounded-[1.5rem] border border-line bg-white p-5 transition-[border-color,box-shadow] duration-500 hover:border-ember-200 hover:shadow-[0_30px_60px_-36px_rgb(205_74_18/0.45)] sm:rounded-[1.75rem] sm:p-8">
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className="font-display text-[1.75rem] font-semibold tracking-[-0.03em] text-ink">{s.title}</h3>
+                    <h3 className="font-display text-[1.5rem] font-semibold tracking-[-0.03em] text-ink sm:text-[1.75rem]">{s.title}</h3>
                     <span className="grid size-11 place-items-center rounded-2xl bg-paper-2 text-ember-600 transition-colors duration-500 group-hover:bg-ember-600 group-hover:text-white">
                       <Icon className="size-5" />
                     </span>

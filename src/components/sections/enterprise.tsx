@@ -17,14 +17,14 @@ export function Enterprise() {
           <div className="absolute -bottom-48 -left-40 size-[560px] rounded-full bg-[radial-gradient(closest-side,rgb(246_194_68/0.16),transparent)] blur-2xl" />
         </div>
 
-        <div className="relative mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+        <div className="relative mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-28">
           {/* Stats */}
           <dl className="grid grid-cols-2 gap-y-12 border-b border-night-line pb-16 sm:pb-20 lg:grid-cols-4">
             {stats.map((s, i) => (
               <div
                 key={s.label}
                 className={cn(
-                  "reveal flex flex-col-reverse justify-end gap-3 border-night-line px-4 sm:px-8",
+                  "reveal flex flex-col-reverse justify-end gap-3 border-night-line px-3.5 sm:px-8",
                   i % 2 === 1 && "border-l",
                   i === 2 && "lg:border-l",
                   i % 2 === 0 && "pl-0 sm:pl-0",
@@ -32,7 +32,7 @@ export function Enterprise() {
                 )}
               >
                 <dt className="font-mono text-[0.68rem] tracking-[0.16em] text-cream-mute uppercase">{s.label}</dt>
-                <dd className="font-display text-[clamp(2.6rem,5.5vw,4.5rem)] leading-none font-semibold tracking-[-0.045em]">
+                <dd className="font-display text-[clamp(2.15rem,5.5vw,4.5rem)] leading-none font-semibold tracking-[-0.045em]">
                   <CountUp value={s.value} suffix={s.suffix} className="text-cream" />
                 </dd>
               </div>
@@ -66,7 +66,7 @@ export function Enterprise() {
                   </li>
                 ))}
               </ul>
-              <div className="reveal mt-11 flex flex-col gap-3 sm:flex-row">
+              <div className="reveal mt-10 flex flex-col gap-3 sm:mt-11 sm:flex-row">
                 <ButtonLink href={bookingHref("enterprise")} arrow size="lg">
                   Book a strategy call
                 </ButtonLink>

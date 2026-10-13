@@ -65,8 +65,10 @@ export function Testimonials() {
                 </div>
                 <blockquote
                   className={cn(
-                    "mt-5 leading-relaxed",
-                    featured ? "font-display text-[1.45rem] leading-snug font-medium tracking-tight" : "text-[1.05rem] text-ink-2",
+                    "mt-5",
+                    featured
+                      ? "font-display text-[1.3rem] leading-snug font-medium tracking-tight sm:text-[1.45rem]"
+                      : "text-[1.05rem] leading-relaxed text-ink-2",
                   )}
                 >
                   “{t.quote}”

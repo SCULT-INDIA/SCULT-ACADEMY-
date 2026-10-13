@@ -53,10 +53,10 @@ export default function BrandPage() {
 
           {/* Hero mark with clear-space guide */}
           <div className="mt-14 grid gap-4 lg:grid-cols-[1.3fr_1fr]">
-            <Tile className="min-h-[26rem]" label="Primary mark">
-              <div className="relative p-10">
+            <Tile className="min-h-[22rem] sm:min-h-[26rem]" label="Primary mark">
+              <div className="relative p-6 sm:p-10">
                 <div aria-hidden="true" className="absolute inset-0 rounded-3xl border-2 border-dashed border-ember-200" />
-                <LogoMark title="Scult Academy mark" className="relative h-56 sm:h-64" />
+                <LogoMark title="Scult Academy mark" className="relative h-44 sm:h-64" />
               </div>
             </Tile>
             <div className="grid gap-4">
@@ -97,17 +97,17 @@ export default function BrandPage() {
           <Section title="App icons & avatars" lead="The mark centred on a rounded tile for app stores, social avatars and favicons.">
             <div className="grid gap-4 sm:grid-cols-2">
               <Tile label="Light tile" className="min-h-72 bg-paper-2">
-                <div className="flex items-end gap-6">
-                  <AppIcon className="size-32 drop-shadow-[0_20px_30px_rgb(23_19_15/0.18)]" />
-                  <AppIcon className="size-20" />
-                  <AppIcon className="size-12" />
+                <div className="flex items-end gap-4 sm:gap-6">
+                  <AppIcon className="size-24 drop-shadow-[0_20px_30px_rgb(23_19_15/0.18)] sm:size-32" />
+                  <AppIcon className="size-16 sm:size-20" />
+                  <AppIcon className="size-10 sm:size-12" />
                 </div>
               </Tile>
               <Tile label="Dark tile" className="min-h-72 bg-paper-2">
-                <div className="flex items-end gap-6">
-                  <AppIcon tone="dark" className="size-32 drop-shadow-[0_20px_30px_rgb(23_19_15/0.3)]" />
-                  <AppIcon tone="dark" className="size-20" />
-                  <AppIcon tone="dark" className="size-12" />
+                <div className="flex items-end gap-4 sm:gap-6">
+                  <AppIcon tone="dark" className="size-24 drop-shadow-[0_20px_30px_rgb(23_19_15/0.3)] sm:size-32" />
+                  <AppIcon tone="dark" className="size-16 sm:size-20" />
+                  <AppIcon tone="dark" className="size-10 sm:size-12" />
                 </div>
               </Tile>
             </div>
@@ -115,7 +115,7 @@ export default function BrandPage() {
 
           {/* Sizes */}
           <Section title="Size ladder" lead="Rendered at actual pixel sizes. 16–48px use the small-size cut.">
-            <div className="flex flex-wrap items-end gap-x-10 gap-y-8 rounded-[2rem] border border-line bg-white p-8 sm:p-12">
+            <div className="flex flex-wrap items-end gap-x-7 gap-y-8 rounded-[2rem] border border-line bg-white p-6 sm:gap-x-10 sm:p-12">
               {sizes.map((s) => (
                 <figure key={s} className="flex flex-col items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element -- previews the exact asset at its real size */}
@@ -182,7 +182,7 @@ function Tile({
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center justify-center rounded-[2rem] border p-8",
+        "relative flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-[2rem] border p-6 pt-12 sm:p-8 sm:pt-12",
         dark ? "border-night-line bg-night" : "border-line bg-white",
         className,
       )}
@@ -202,13 +202,13 @@ function Tile({
 
 function Lockup({ stacked, dark }: { stacked?: boolean; dark?: boolean }) {
   return (
-    <div className={cn("flex items-center", stacked ? "flex-col gap-5" : "gap-4")}>
-      <LogoMark className={stacked ? "h-24" : "h-14"} />
+    <div className={cn("flex items-center", stacked ? "flex-col gap-5" : "gap-3 sm:gap-4")}>
+      <LogoMark className={stacked ? "h-20 sm:h-24" : "h-10 sm:h-14"} />
       <span className={cn("flex leading-none", stacked ? "flex-col items-center gap-2.5" : "items-baseline gap-2.5")}>
         <span
           className={cn(
             "font-display font-bold tracking-[-0.045em]",
-            stacked ? "text-6xl" : "text-5xl",
+            stacked ? "text-5xl sm:text-6xl" : "text-[2.4rem] sm:text-5xl",
             dark ? "text-cream" : "text-ink",
           )}
         >
@@ -217,7 +217,7 @@ function Lockup({ stacked, dark }: { stacked?: boolean; dark?: boolean }) {
         <span
           className={cn(
             "font-mono font-medium tracking-[0.22em] uppercase",
-            stacked ? "text-base" : "text-sm",
+            stacked ? "text-sm sm:text-base" : "text-[0.7rem] sm:text-sm",
             dark ? "text-cream-mute" : "text-ink-mute",
           )}
         >

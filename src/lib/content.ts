@@ -53,6 +53,7 @@ export const techStack = [
 export type Audience = {
   id: string;
   label: string;
+  shortLabel: string;
   icon: LucideIcon;
   kicker: string;
   title: string;
@@ -68,6 +69,7 @@ export const audiences: Audience[] = [
   {
     id: "students",
     label: "Students",
+    shortLabel: "Students",
     icon: GraduationCap,
     kicker: "For students",
     title: "Start early. Start strong.",
@@ -95,6 +97,7 @@ export const audiences: Audience[] = [
   {
     id: "experts",
     label: "Professionals & Experts",
+    shortLabel: "Professionals",
     icon: Briefcase,
     kicker: "For professionals & experts",
     title: "Stay ahead of the curve.",
@@ -122,6 +125,7 @@ export const audiences: Audience[] = [
   {
     id: "industries",
     label: "Industries",
+    shortLabel: "Industries",
     icon: Factory,
     kicker: "For industries",
     title: "AI, applied to your domain.",
@@ -149,6 +153,7 @@ export const audiences: Audience[] = [
   {
     id: "enterprises",
     label: "Enterprises",
+    shortLabel: "Enterprises",
     icon: Building,
     kicker: "For enterprises",
     title: "Upskill at the speed of change.",

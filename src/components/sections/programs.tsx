@@ -68,7 +68,7 @@ function Meta({
     <div
       className={cn(
         "flex gap-x-4 gap-y-1.5 text-[0.8rem]",
-        stacked ? "flex-col" : "flex-wrap items-center",
+        stacked ? "flex-wrap items-center lg:flex-col lg:items-start" : "flex-wrap items-center",
         tone === "light" ? "text-ink-mute" : "text-cream-mute",
       )}
     >
@@ -87,7 +87,7 @@ function ProgramCard({ program, className, wide }: { program: Program; className
   return (
     <Spotlight
       className={cn(
-        "reveal group flex flex-col rounded-[1.75rem] border border-line bg-white p-7 shadow-[0_20px_50px_-40px_rgb(23_19_15/0.45)] transition-[border-color,box-shadow,transform] duration-500 hover:-translate-y-1 hover:border-ember-200 hover:shadow-[0_30px_60px_-30px_rgb(205_74_18/0.35)]",
+        "reveal group flex flex-col rounded-[1.75rem] border border-line bg-white p-6 shadow-[0_20px_50px_-40px_rgb(23_19_15/0.45)] transition-[border-color,box-shadow,transform] duration-500 hover:-translate-y-1 hover:border-ember-200 hover:shadow-[0_30px_60px_-30px_rgb(205_74_18/0.35)]",
         className,
       )}
     >
@@ -102,21 +102,20 @@ function ProgramCard({ program, className, wide }: { program: Program; className
       <h3 className="mt-6 font-display text-[1.45rem] leading-tight font-semibold tracking-[-0.025em] text-ink">
         {program.title}
       </h3>
-      <p className={cn("mt-2.5 leading-relaxed text-ink-soft", wide ? "max-w-md" : "text-[0.95rem]")}>
+      <p className={cn("mt-2.5 text-ink-soft", wide ? "max-w-md" : "text-[0.95rem]", "leading-relaxed")}>
         {program.description}
       </p>
       <div className="mt-auto flex items-end justify-between gap-4 pt-7">
         <div className="space-y-3">
           <Meta program={program} stacked={!wide} />
-          {wide && (
-            <div className="flex flex-wrap gap-1.5">
-              {program.tags.map((t) => (
-                <span key={t} className="rounded-full bg-paper-2 px-2.5 py-1 text-xs font-medium text-ink-soft">
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
+          {/* Narrow bento cards hide tags on desktop; every card shows them when stacked. */}
+          <div className={cn("flex flex-wrap gap-1.5", !wide && "lg:hidden")}>
+            {program.tags.map((t) => (
+              <span key={t} className="rounded-full bg-paper-2 px-2.5 py-1 text-xs font-medium text-ink-soft">
+                {t}
+              </span>
+            ))}
+          </div>
         </div>
         <Link
           href={bookingHref("counselling", program.slug)}
@@ -137,7 +136,7 @@ function FeaturedCard({ program, className }: { program: Program; className?: st
     <Spotlight
       spot="rgb(234 101 38 / 0.22)"
       className={cn(
-        "reveal group relative flex flex-col overflow-hidden rounded-[1.75rem] bg-night p-7 text-cream shadow-[0_40px_80px_-40px_rgb(23_19_15/0.8)] sm:p-9",
+        "reveal group relative flex flex-col overflow-hidden rounded-[1.75rem] bg-night p-6 text-cream shadow-[0_40px_80px_-40px_rgb(23_19_15/0.8)] sm:p-9",
         className,
       )}
     >
@@ -166,18 +165,20 @@ function FeaturedCard({ program, className }: { program: Program; className?: st
         aria-hidden="true"
         className="relative mt-8 rounded-2xl border border-night-line bg-night-2/90 p-4 sm:p-5"
       >
-        <div className="flex items-center justify-between font-mono text-[0.6rem] tracking-[0.16em] text-cream-mute uppercase">
-          <span>Capstone · RAG pipeline</span>
+        <div className="flex items-center justify-between gap-3 font-mono text-[0.6rem] tracking-[0.16em] text-cream-mute uppercase">
+          <span>
+            Capstone<span className="hidden sm:inline"> · RAG pipeline</span>
+          </span>
           <span className="text-sun-400">● running</span>
         </div>
-        <div className="relative mt-4 flex items-center justify-between gap-1">
+        <div className="relative mt-4 flex items-center justify-between gap-0.5 sm:gap-1">
           <div className="absolute inset-x-4 top-1/2 h-px -translate-y-1/2 bg-[repeating-linear-gradient(90deg,var(--color-night-line)_0_6px,transparent_6px_10px)]" />
           <div className="absolute top-1/2 left-4 size-2 -translate-y-1/2 animate-[travel_3.2s_ease-in-out_infinite] rounded-full bg-ember-400 shadow-[0_0_12px_2px_rgb(234_101_38/0.7)]" />
           {pipeline.map((node, i) => (
             <span
               key={node}
               className={cn(
-                "relative rounded-lg border px-2 py-1.5 font-mono text-[0.62rem] sm:px-3 sm:text-[0.7rem]",
+                "relative rounded-lg border px-1.5 py-1 font-mono text-[0.58rem] sm:px-3 sm:py-1.5 sm:text-[0.7rem]",
                 i === pipeline.length - 1
                   ? "border-ember-600 bg-ember-600 text-white"
                   : "border-night-line bg-night-3 text-cream",

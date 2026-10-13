@@ -32,7 +32,7 @@ export function HeroStage() {
 
         <div className="relative grid gap-3 sm:gap-4 md:grid-cols-12">
           {/* Learning path */}
-          <div className="hidden rounded-[1.4rem] bg-paper p-5 text-left shadow-[0_20px_40px_-24px_rgb(60_20_0/0.6)] md:col-span-4 md:block">
+          <div className="hidden rounded-[1.4rem] bg-paper p-5 text-left shadow-[0_20px_40px_-24px_rgb(60_20_0/0.6)] md:col-span-5 md:block lg:col-span-4">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[0.62rem] tracking-[0.16em] text-ink-mute uppercase">Your path</span>
               <span className="rounded-full bg-ember-100 px-2 py-0.5 font-mono text-[0.62rem] font-semibold text-ember-700">
@@ -70,7 +70,7 @@ export function HeroStage() {
           </div>
 
           {/* Live class */}
-          <div className="overflow-hidden rounded-[1.4rem] bg-night text-left text-cream shadow-[0_30px_60px_-24px_rgb(40_12_0/0.8)] md:col-span-8 lg:col-span-5">
+          <div className="overflow-hidden rounded-[1.4rem] bg-night text-left text-cream shadow-[0_30px_60px_-24px_rgb(40_12_0/0.8)] md:col-span-7 lg:col-span-5">
             <div className="flex items-center justify-between border-b border-night-line px-4 py-3">
               <div className="flex items-center gap-1.5" aria-hidden="true">
                 <span className="size-2.5 rounded-full bg-night-line" />
@@ -86,7 +86,7 @@ export function HeroStage() {
               <p className="font-display text-lg font-semibold tracking-tight">Building production AI agents</p>
               <p className="mt-0.5 text-xs text-cream-mute">Session 12 · Agents &amp; Automation</p>
             </div>
-            <pre className="mx-3 mt-4 overflow-hidden rounded-xl border border-night-line bg-night-2 p-4 font-mono text-[0.72rem] leading-[1.75] sm:text-[0.78rem]">
+            <pre className="mx-3 mt-4 overflow-hidden rounded-xl border border-night-line bg-night-2 p-3.5 font-mono text-[0.68rem] leading-[1.75] sm:p-4 sm:text-[0.78rem]">
               <code>
                 <Line n={1}>
                   <K>from</K> scult <K>import</K> Agent
@@ -104,7 +104,7 @@ export function HeroStage() {
                 <Line n={6}>)</Line>
                 <Line n={7}> </Line>
                 <Line n={8}>
-                  agent.<F>run</F>(<S>&quot;Ship the analytics MVP&quot;</S>)
+                  agent.<F>run</F>(<S>&quot;Ship the MVP&quot;</S>)
                   <span className="ml-0.5 inline-block h-[1.1em] w-[0.55em] translate-y-[0.2em] animate-blink bg-ember-400" />
                 </Line>
               </code>
@@ -123,8 +123,8 @@ export function HeroStage() {
           </div>
 
           {/* Analytics + credential */}
-          <div className="hidden gap-3 sm:gap-4 lg:col-span-3 lg:grid">
-            <div className="rounded-[1.4rem] bg-paper p-5 text-left shadow-[0_20px_40px_-24px_rgb(60_20_0/0.6)]">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:col-span-12 lg:col-span-3 lg:grid-cols-1">
+            <div className="rounded-[1.4rem] bg-paper p-4 text-left shadow-[0_20px_40px_-24px_rgb(60_20_0/0.6)] sm:p-5">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-[0.62rem] tracking-[0.16em] text-ink-mute uppercase">Skill score</span>
                 <TrendingUp className="size-4 text-ember-600" />
@@ -132,7 +132,7 @@ export function HeroStage() {
               <p className="mt-2 font-display text-3xl font-semibold tracking-tight">
                 +38<span className="text-xl text-ink-mute">%</span>
               </p>
-              <div className="mt-4 flex h-20 items-end gap-1.5">
+              <div className="mt-4 flex h-16 items-end gap-1 sm:h-20 sm:gap-1.5">
                 {bars.map((h, i) => (
                   <span
                     key={i}
@@ -145,16 +145,17 @@ export function HeroStage() {
                 ))}
               </div>
             </div>
-            <div className="rounded-[1.4rem] bg-sun-400 p-5 text-left text-ink shadow-[0_20px_40px_-24px_rgb(60_20_0/0.6)]">
+            <div className="flex flex-col rounded-[1.4rem] bg-sun-400 p-4 text-left text-ink shadow-[0_20px_40px_-24px_rgb(60_20_0/0.6)] sm:p-5">
               <div className="flex items-center justify-between">
                 <span className="grid size-9 place-items-center rounded-full bg-ink text-sun-300">
                   <Medal className="size-4" />
                 </span>
                 <span className="flex items-center gap-1 rounded-full bg-ink/10 px-2 py-0.5 font-mono text-[0.6rem] font-semibold tracking-wider uppercase">
-                  <BadgeCheck className="size-3" /> Verified
+                  <BadgeCheck className="size-3" />
+                  <span className="hidden min-[380px]:inline">Verified</span>
                 </span>
               </div>
-              <p className="mt-4 font-display text-lg leading-tight font-semibold tracking-tight">GenAI Practitioner</p>
+              <p className="mt-auto pt-4 font-display text-base leading-tight font-semibold tracking-tight sm:text-lg">GenAI Practitioner</p>
               <p className="mt-1 font-mono text-[0.62rem] text-ink/60">ID · SC-2026-0481</p>
             </div>
           </div>

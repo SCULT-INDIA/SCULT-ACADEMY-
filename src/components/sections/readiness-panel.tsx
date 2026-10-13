@@ -40,16 +40,18 @@ export function ReadinessPanel() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: "-80px" }}
-        className="rounded-[1.9rem] border border-night-line bg-night-2/90 p-6 shadow-[0_50px_100px_-40px_rgb(0_0_0/0.8)] backdrop-blur sm:p-8"
+        className="rounded-[1.6rem] border border-night-line bg-night-2/90 p-5 shadow-[0_50px_100px_-40px_rgb(0_0_0/0.8)] backdrop-blur sm:p-8"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="font-mono text-[0.62rem] tracking-[0.16em] text-cream-mute uppercase">Team AI readiness</p>
+            <p className="font-mono text-[0.62rem] tracking-[0.16em] whitespace-nowrap text-cream-mute uppercase">
+              Team AI readiness
+            </p>
             <p className="mt-2 flex items-baseline gap-2 font-display text-5xl font-semibold tracking-[-0.04em] text-cream">
               72<span className="text-xl text-cream-mute">/100</span>
             </p>
           </div>
-          <span className="flex items-center gap-1 rounded-full bg-sun-400/15 px-3 py-1.5 font-mono text-[0.68rem] font-semibold text-sun-300">
+          <span className="flex items-center gap-1 rounded-full bg-sun-400/15 px-3 py-1.5 font-mono text-[0.68rem] font-semibold whitespace-nowrap text-sun-300">
             <ArrowUpRight className="size-3.5" /> +18 pts this quarter
           </span>
         </div>

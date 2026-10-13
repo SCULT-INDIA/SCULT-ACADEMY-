@@ -27,7 +27,7 @@ const columns = [
       { label: "Learner stories", href: "/#stories" },
       { label: "Partner with us", href: bookingHref("partnership") },
       { label: "Brand assets", href: "/brand" },
-      { label: `${site.parent.name} — parent company`, href: site.parent.url },
+      { label: "Visit scult.in", href: site.parent.url },
     ],
   },
 ];
@@ -43,9 +43,9 @@ const isExternal = (href: string) => href.startsWith("http");
 
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden pt-24">
-      <div className="mx-auto grid max-w-6xl gap-12 px-5 md:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
-        <div className="max-w-sm">
+    <footer className="relative overflow-hidden pt-20 sm:pt-24">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-12 px-5 md:grid-cols-3 lg:grid-cols-[1.6fr_repeat(3,1fr)]">
+        <div className="col-span-2 max-w-sm md:col-span-3 lg:col-span-1">
           <Logo />
           <p className="mt-5 leading-relaxed text-ink-soft">
             Sculpting the builders of the AI era — for students, professionals, industries and enterprises.
@@ -132,7 +132,7 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="mx-auto mt-20 flex max-w-6xl flex-col gap-4 border-t border-line px-5 py-8 text-sm text-ink-mute sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto mt-16 flex max-w-6xl flex-col gap-3 border-t border-line px-5 py-8 text-sm text-ink-mute sm:mt-20 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © 2026 {site.name}. A{" "}
           <a href={site.parent.url} target="_blank" rel="noopener noreferrer" className="font-medium text-ink-soft hover:text-ink">

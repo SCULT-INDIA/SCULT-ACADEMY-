@@ -103,7 +103,7 @@ export function Audiences() {
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setActive(i)}
                 className={cn(
-                  "relative rounded-[1.2rem] px-4 py-3 text-sm font-medium transition-colors sm:rounded-full sm:px-5 sm:py-2.5",
+                  "relative rounded-[1.2rem] px-3 py-3 text-sm font-medium transition-colors sm:rounded-full sm:px-5 sm:py-2.5",
                   selected ? "text-cream" : "text-ink-soft hover:text-ink",
                 )}
               >
@@ -114,9 +114,10 @@ export function Audiences() {
                     transition={{ type: "spring", bounce: 0.18, duration: 0.6 }}
                   />
                 )}
-                <span className="relative flex items-center justify-center gap-2">
-                  <TabIcon className={cn("size-4", selected && "text-ember-400")} />
-                  {a.label}
+                <span className="relative flex items-center justify-center gap-2 whitespace-nowrap">
+                  <TabIcon className={cn("size-4 shrink-0", selected && "text-ember-400")} />
+                  <span className="sm:hidden">{a.shortLabel}</span>
+                  <span className="hidden sm:inline">{a.label}</span>
                 </span>
               </button>
             );
@@ -136,7 +137,7 @@ export function Audiences() {
               transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="grid gap-4 lg:grid-cols-[1.2fr_1fr]"
             >
-              <div className="rounded-[2rem] border border-line bg-white p-7 shadow-[0_30px_60px_-40px_rgb(23_19_15/0.35)] sm:p-10">
+              <div className="rounded-[2rem] border border-line bg-white p-6 shadow-[0_30px_60px_-40px_rgb(23_19_15/0.35)] sm:p-10">
                 <p className="font-mono text-[0.68rem] font-medium tracking-[0.16em] text-ember-700 uppercase">
                   {current.kicker}
                 </p>
@@ -167,12 +168,12 @@ export function Audiences() {
                   ))}
                 </div>
 
-                <ButtonLink href={current.cta.href} arrow className="mt-9">
+                <ButtonLink href={current.cta.href} arrow className="mt-9 w-full sm:w-auto">
                   {current.cta.label}
                 </ButtonLink>
               </div>
 
-              <div className={cn("matte relative overflow-hidden rounded-[2rem] p-7 sm:p-10", tone.card)}>
+              <div className={cn("matte relative overflow-hidden rounded-[2rem] p-6 sm:p-10", tone.card)}>
                 <Icon
                   aria-hidden="true"
                   className="pointer-events-none absolute -right-10 -bottom-10 size-64 opacity-[0.09]"

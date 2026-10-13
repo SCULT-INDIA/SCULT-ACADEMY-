@@ -59,8 +59,9 @@ export function SectionHeading({
       <h2
         id={id}
         className={cn(
-          "mt-6 font-display font-semibold leading-[0.98] tracking-[-0.04em]",
-          size === "lg" ? "text-[clamp(2.4rem,5.4vw,4.4rem)]" : "text-[clamp(2.3rem,4.4vw,3.6rem)]",
+          // Font size must precede leading: tailwind-merge drops a leading-* that comes before a text-* size.
+          size === "lg" ? "text-[clamp(2.3rem,5.4vw,4.4rem)]" : "text-[clamp(2.2rem,4.4vw,3.6rem)]",
+          "mt-6 font-display leading-[1] font-semibold tracking-[-0.04em] sm:leading-[0.98]",
           tone === "light" ? "text-ink" : "text-cream",
         )}
       >

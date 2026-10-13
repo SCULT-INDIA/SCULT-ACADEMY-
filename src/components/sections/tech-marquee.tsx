@@ -10,7 +10,7 @@ export function TechMarquee() {
     <section aria-labelledby="stack-title" className="relative border-y border-line bg-paper-2/60 py-14">
       <h2
         id="stack-title"
-        className="text-center font-mono text-[0.7rem] font-medium tracking-[0.18em] text-ink-mute uppercase"
+        className="px-5 text-center font-mono text-[0.7rem] font-medium tracking-[0.18em] text-ink-mute uppercase"
       >
         Master the stack shaping 2026 and beyond
       </h2>

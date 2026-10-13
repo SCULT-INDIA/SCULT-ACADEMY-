@@ -11,11 +11,11 @@ export function TimelineProgress({ children }: { children: ReactNode }) {
 
   return (
     <ol ref={ref} className="relative">
-      <span aria-hidden="true" className="absolute top-2 bottom-2 left-[1.75rem] w-px -translate-x-1/2 bg-line-strong" />
+      <span aria-hidden="true" className="absolute top-2 bottom-2 left-[1.375rem] w-px -translate-x-1/2 bg-line-strong sm:left-[1.75rem]" />
       <motion.span
         aria-hidden="true"
         style={{ scaleY }}
-        className="absolute top-2 bottom-2 left-[1.75rem] w-[3px] origin-top -translate-x-1/2 rounded-full bg-linear-to-b from-sun-400 via-ember-500 to-ember-600"
+        className="absolute top-2 bottom-2 left-[1.375rem] w-[3px] origin-top -translate-x-1/2 rounded-full bg-linear-to-b from-sun-400 via-ember-500 to-ember-600 sm:left-[1.75rem]"
       />
       {children}
     </ol>
