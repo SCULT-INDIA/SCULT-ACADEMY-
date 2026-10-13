@@ -10,6 +10,7 @@
     "brand:assets": "node scripts/brand-assets.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.56.0",
     "motion": "^14.1.0",
