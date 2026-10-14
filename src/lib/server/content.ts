@@ -52,8 +52,15 @@ function githubHeaders(accept: string): HeadersInit {
   };
 }
 
-/** Raw bytes of a content file, or null when it doesn't exist. */
-export async function readContentBytes(path: string): Promise<Uint8Array | null> {
+/* Cached reads never throw: an error escaping a "use cache" scope fails the
+   whole prerender even when a caller catches it (a bad token would then
+   break every deploy). They return a result instead, and the exported
+   wrappers turn failures into ContentError outside the cache. */
+type Read<T> = { ok: true; value: T } | { ok: false; error: string };
+
+const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
+async function cachedBytes(path: string): Promise<Read<Uint8Array | null>> {
   "use cache";
   cacheTag(CONTENT_TAG);
   // Local checkouts refresh within seconds; GitHub reads are cached a little longer.
@@ -61,18 +68,62 @@ export async function readContentBytes(path: string): Promise<Uint8Array | null>
   if (env.contentDir) cacheLife({ stale: 30, revalidate: 2, expire: 600 });
   else cacheLife("minutes");
 
-  if (env.contentDir) {
-    try {
-      return new Uint8Array(await readFile(localPath(path)));
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
-      throw error;
+  try {
+    if (env.contentDir) {
+      try {
+        return { ok: true, value: new Uint8Array(await readFile(localPath(path))) };
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") return { ok: true, value: null };
+        throw error;
+      }
     }
+    const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github.raw+json") });
+    if (res.status === 404) return { ok: true, value: null };
+    if (!res.ok) return { ok: false, error: `GitHub content read failed (${res.status}) for ${path}` };
+    return { ok: true, value: new Uint8Array(await res.arrayBuffer()) };
+  } catch (error) {
+    return { ok: false, error: message(error) };
   }
-  const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github.raw+json") });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new ContentError(`GitHub content read failed (${res.status}) for ${path}`);
-  return new Uint8Array(await res.arrayBuffer());
+}
+
+type Entry = { name: string; type: "file" | "dir" };
+
+async function cachedDir(path: string): Promise<Read<Entry[]>> {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  if (env.contentDir) cacheLife({ stale: 30, revalidate: 2, expire: 600 });
+  else cacheLife("minutes");
+
+  try {
+    if (env.contentDir) {
+      try {
+        const entries = await readdir(localPath(path), { withFileTypes: true });
+        return {
+          ok: true,
+          value: entries
+            .filter((e) => !e.name.startsWith("."))
+            .map((e) => ({ name: e.name, type: e.isDirectory() ? ("dir" as const) : ("file" as const) })),
+        };
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") return { ok: true, value: [] };
+        throw error;
+      }
+    }
+    const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github+json") });
+    if (res.status === 404) return { ok: true, value: [] };
+    if (!res.ok) return { ok: false, error: `GitHub directory read failed (${res.status}) for ${path}` };
+    const items = (await res.json()) as { name: string; type: string }[];
+    return { ok: true, value: items.map((i) => ({ name: i.name, type: i.type === "dir" ? ("dir" as const) : ("file" as const) })) };
+  } catch (error) {
+    return { ok: false, error: message(error) };
+  }
+}
+
+/** Raw bytes of a content file, or null when it doesn't exist. Throws ContentError if unreachable. */
+export async function readContentBytes(path: string): Promise<Uint8Array | null> {
+  const result = await cachedBytes(path);
+  if (!result.ok) throw new ContentError(result.error);
+  return result.value;
 }
 
 export async function readContentText(path: string) {
@@ -85,31 +136,11 @@ export async function readContentJson<T>(path: string): Promise<T | null> {
   return text ? (JSON.parse(text) as T) : null;
 }
 
-/** Names of the entries in a content directory (empty when missing). */
-export async function listContentDir(path: string): Promise<{ name: string; type: "file" | "dir" }[]> {
-  "use cache";
-  cacheTag(CONTENT_TAG);
-  // Local checkouts refresh within seconds; GitHub reads are cached a little longer.
-  // Both expire after ≥ 5 minutes so pages using them can still be prerendered.
-  if (env.contentDir) cacheLife({ stale: 30, revalidate: 2, expire: 600 });
-  else cacheLife("minutes");
-
-  if (env.contentDir) {
-    try {
-      const entries = await readdir(localPath(path), { withFileTypes: true });
-      return entries
-        .filter((e) => !e.name.startsWith("."))
-        .map((e) => ({ name: e.name, type: e.isDirectory() ? ("dir" as const) : ("file" as const) }));
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
-      throw error;
-    }
-  }
-  const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github+json") });
-  if (res.status === 404) return [];
-  if (!res.ok) throw new ContentError(`GitHub directory read failed (${res.status}) for ${path}`);
-  const items = (await res.json()) as { name: string; type: string }[];
-  return items.map((i) => ({ name: i.name, type: i.type === "dir" ? ("dir" as const) : ("file" as const) }));
+/** Entries of a content directory (empty when missing). Throws ContentError if unreachable. */
+export async function listContentDir(path: string): Promise<Entry[]> {
+  const result = await cachedDir(path);
+  if (!result.ok) throw new ContentError(result.error);
+  return result.value;
 }
 
 /** Creates or replaces a file. Remote writes become a commit on the content repo. */
