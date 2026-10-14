@@ -35,9 +35,9 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Setup for team features
 
 Copy `.env.example` to `.env.local` and fill it in. Team pages need `STAGE_PASSCODE` and `AUTH_SECRET`.
-Content (decks, workshop details, certificate records) lives in the private repo `SCULT-INDIA/scult-academy-content`:
+Content (decks, workshop details, certificate records) lives in the private repo `Pranjulrathour/juvenile-ai-workshop`:
 
-- **Local:** `git clone https://github.com/SCULT-INDIA/scult-academy-content.git .content` and set `CONTENT_DIR=.content`.
+- **Local:** `git clone https://github.com/Pranjulrathour/juvenile-ai-workshop.git .content` and set `CONTENT_DIR=.content`.
 - **Production:** set `CONTENT_TOKEN` to a fine-grained GitHub token with *Contents: read & write* on that repo only. Signatures saved in `/admin` become commits there.
 
 Student records never enter this (public) repository.

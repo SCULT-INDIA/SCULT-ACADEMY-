@@ -5,7 +5,7 @@ export const env = {
   passcode: process.env.STAGE_PASSCODE ?? "",
   authSecret: process.env.AUTH_SECRET ?? "",
   contentDir: process.env.CONTENT_DIR ?? "",
-  contentRepo: process.env.CONTENT_REPO ?? "SCULT-INDIA/scult-academy-content",
+  contentRepo: process.env.CONTENT_REPO ?? "Pranjulrathour/juvenile-ai-workshop",
   contentBranch: process.env.CONTENT_BRANCH ?? "main",
   contentToken: process.env.CONTENT_TOKEN ?? "",
 } as const;
