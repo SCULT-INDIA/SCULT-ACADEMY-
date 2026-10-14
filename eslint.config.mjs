@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local checkout of the private content repo and copied vendor files.
+    ".content/**",
+    "public/vendor/**",
   ]),
 ]);
 

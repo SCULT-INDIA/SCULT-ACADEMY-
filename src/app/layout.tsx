@@ -76,6 +76,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${geist.variable} ${geistMono.variable} ${bricolage.variable} ${instrumentSerif.variable} antialiased`}
     >
       <body className="grain min-h-dvh overflow-x-clip">

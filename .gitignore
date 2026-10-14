@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -42,3 +43,9 @@ next-env.d.ts
 
 # local tooling artifacts
 /.playwright-mcp/
+
+# private content repo (cloned locally for development; never commit)
+/.content/
+
+# copied on postinstall
+/public/vendor/

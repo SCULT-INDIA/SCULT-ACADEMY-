@@ -25,6 +25,22 @@ Open [http://localhost:3000](http://localhost:3000).
 - `/` — landing page
 - `/book` — Calendly-style booking (session → date & time → details). Bookings hand off to WhatsApp with every detail pre-filled. Deep-link with `?type=counselling|enterprise|partnership|demo` and `?program=<slug>`.
 - `/brand` — logo variations and downloads
+- `/workshops/<slug>` — public workshop pages (e.g. `juvenile-ai-2026`), driven by the content repo
+- `/certificates` — students find their certificate with their registered email + phone; PDF/PNG download and "Add to LinkedIn"
+- `/verify/<id>/<code>` — public certificate verification (what the QR code opens); `/verify` for manual checks
+- `/stage` — **Scult Stage**, the team-only presenter: Markdown/PDF decks, pressure-sensitive pen ink (XP-Pen, Wacom, Apple Pencil, touch), laser, shapes, whiteboard, spotlight, black/white screen, presenter console + synced audience screen. Press `?` in a deck for shortcuts and pen setup.
+- `/admin` — team-only certificates admin: sign with a pen tablet, preview, bulk ZIP download
+- `/login` — shared team passcode
+
+## Setup for team features
+
+Copy `.env.example` to `.env.local` and fill it in. Team pages need `STAGE_PASSCODE` and `AUTH_SECRET`.
+Content (decks, workshop details, certificate records) lives in the private repo `SCULT-INDIA/scult-academy-content`:
+
+- **Local:** `git clone https://github.com/SCULT-INDIA/scult-academy-content.git .content` and set `CONTENT_DIR=.content`.
+- **Production:** set `CONTENT_TOKEN` to a fine-grained GitHub token with *Contents: read & write* on that repo only. Signatures saved in `/admin` become commits there.
+
+Student records never enter this (public) repository.
 
 ## Where things live
 

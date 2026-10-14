@@ -206,6 +206,11 @@
     z-index: 100;
   }
 
+  /* Full-screen app surfaces (Stage, login) opt out of the paper grain */
+  body:has([data-no-grain])::before {
+    display: none;
+  }
+
   /* ── Buttons ────────────────────────────────────────────── */
   .btn {
     position: relative;

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { bookingHref } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/button";
@@ -14,19 +15,19 @@ export function Hero() {
       </div>
 
       <div className="mx-auto max-w-6xl px-5 text-center">
-        <a
-          href="#programs"
+        <Link
+          href="/workshops/juvenile-ai-2026"
           className="group animate-rise inline-flex items-center gap-3 rounded-full border border-line bg-white/70 p-1 pr-4 text-sm shadow-[0_6px_20px_-12px_rgb(23_19_15/0.3)] backdrop-blur transition-colors hover:border-line-strong hover:bg-white"
         >
           <span className="matte rounded-full bg-ember-600 px-2.5 py-1 font-mono text-[0.65rem] font-semibold tracking-[0.16em] text-white uppercase">
             New
           </span>
           <span className="text-ink-soft">
-            <span className="font-medium text-ink">AI Agents cohort</span>
-            <span className="hidden sm:inline"> — enrolling now</span>
+            <span className="font-medium text-ink">AI Agents workshop with JuvenileAI</span>
+            <span className="hidden sm:inline"> — 17 Oct</span>
           </span>
           <ArrowRight className="size-3.5 text-ink-soft transition-transform duration-500 group-hover:translate-x-0.5" />
-        </a>
+        </Link>
 
         <h1
           id="hero-title"
