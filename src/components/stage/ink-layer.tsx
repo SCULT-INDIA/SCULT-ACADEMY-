@@ -123,12 +123,13 @@ export function InkLayer({ stage, inkKey, width, height, interactive }: Props) {
       } else if (msg.t === "ink:add" && msg.key === inkKey) {
         remoteLive.current = null;
         paintLiveRef.current();
-      } else if (msg.t === "laser") {
+      } else if (msg.t === "laser" && interactive) {
+        // Only the main surface shows the laser — not the "next" preview or thumbnails.
         laserTrail.current.push({ x: msg.x, y: msg.y, t: performance.now() });
         if (!laserFrame.current) laserFrame.current = requestAnimationFrame(() => paintLaserRef.current());
       }
     });
-  }, [stage, inkKey]);
+  }, [stage, inkKey, interactive]);
 
   useEffect(() => () => cancelAnimationFrame(laserFrame.current), []);
 

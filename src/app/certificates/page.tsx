@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { BadgeCheck, QrCode, Share2 } from "lucide-react";
+import { Download, Hash, Printer } from "lucide-react";
 import { Footer } from "@/components/sections/footer";
 import { Navbar } from "@/components/sections/navbar";
 import { Accent, Eyebrow } from "@/components/ui/section-heading";
@@ -9,14 +8,14 @@ import { CertificateLookup } from "./lookup";
 export const metadata: Metadata = {
   title: "Your certificate",
   description:
-    "Download your Scult Academy workshop certificate — co-issued with JuvenileAI — using your registered email and phone number.",
+    "Download your Scult Academy workshop certificate — co-issued with JuvenileAI — using your registered email.",
   alternates: { canonical: "/certificates" },
 };
 
 const points = [
-  { icon: BadgeCheck, title: "Verifiable", text: "Every certificate has a QR code and a unique verification code." },
-  { icon: QrCode, title: "Print-ready", text: "High-resolution PDF for printing, PNG for sharing." },
-  { icon: Share2, title: "LinkedIn-ready", text: "Add it to your profile's Licenses & certifications in one click." },
+  { icon: Hash, title: "Your own number", text: "Every certificate carries the certificate number allotted to you at registration." },
+  { icon: Printer, title: "Print-ready", text: "High-resolution PDF, ready to print." },
+  { icon: Download, title: "Instant download", text: "Download it as a PDF or a PNG image, as often as you need." },
 ];
 
 export default function CertificatesPage() {
@@ -34,7 +33,7 @@ export default function CertificatesPage() {
               Get your <Accent className="text-ember-600">certificate.</Accent>
             </h1>
             <p className="mx-auto mt-5 max-w-xl animate-rise text-lg leading-relaxed text-ink-soft [animation-delay:180ms]">
-              Enter the email and phone number you registered with to view, download and share your certificate.
+              Enter the email you registered with to view and download your certificate.
             </p>
           </header>
 
@@ -51,13 +50,6 @@ export default function CertificatesPage() {
               </li>
             ))}
           </ul>
-
-          <p className="mt-8 text-center text-sm text-ink-mute">
-            Checking someone else&apos;s certificate?{" "}
-            <Link href="/verify" className="font-semibold text-ink underline-offset-4 hover:underline">
-              Verify a certificate
-            </Link>
-          </p>
         </div>
       </main>
       <Footer />

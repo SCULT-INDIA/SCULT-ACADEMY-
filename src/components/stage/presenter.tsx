@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, CircleHelp, Clock3, Maximize, MonitorUp, Pause, Play, RotateCcw } from "lucide-react";
+import { ChevronLeft, CircleHelp, Clock3, Maximize, MonitorUp, NotebookPen, Pause, Play, RotateCcw } from "lucide-react";
 import { LogoMark } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 import { type ClientDeck, useSlideSource } from "./deck-client";
 import { HelpDialog } from "./help-dialog";
 import { ImmersiveView, useFullscreen } from "./immersive";
 import { useStageShortcuts } from "./shortcuts";
-import { SlideStage, slideCount, slideKey } from "./slide-view";
-import { StageToolbar, ToolButton } from "./toolbar";
+import { SlideStage, useSlideKeys } from "./slide-view";
+import { DrawTools, keepFocus, ScreenTools, ToolButton } from "./toolbar";
 import { useStage } from "./use-stage";
 
 function useTimer() {
@@ -68,44 +68,56 @@ function Clock() {
   return <span className="tabular-nums">{time}</span>;
 }
 
-/** Opens the audience window — on a second display when the browser allows it. */
-async function openAudienceScreen(href: string) {
-  let features = "popup,width=1280,height=720";
-  try {
-    const w = window as Window & {
-      getScreenDetails?: () => Promise<{ screens: ScreenLike[]; currentScreen: ScreenLike }>;
-    };
-    type ScreenLike = { availLeft: number; availTop: number; availWidth: number; availHeight: number; isPrimary?: boolean };
-    if (w.getScreenDetails) {
-      const details = await w.getScreenDetails();
+type ScreenLike = { availLeft: number; availTop: number; availWidth: number; availHeight: number };
+
+/**
+ * Opens the audience window, then moves it to a second display when the browser
+ * allows. The window opens first, inside the click: waiting on the screen
+ * permission prompt would lose the click and pop-up blockers would stop it.
+ */
+function openAudienceScreen(href: string) {
+  const win = window.open(href, "scult-stage-screen", "popup,width=1280,height=720");
+  if (!win) return false;
+  const w = window as Window & { getScreenDetails?: () => Promise<{ screens: ScreenLike[]; currentScreen: ScreenLike }> };
+  w.getScreenDetails?.()
+    .then((details) => {
       const other = details.screens.find((s) => s !== details.currentScreen);
-      if (other) features = `popup,left=${other.availLeft},top=${other.availTop},width=${other.availWidth},height=${other.availHeight}`;
-    }
-  } catch {
-    /* permission denied — fall back to a normal popup the presenter can drag */
-  }
-  window.open(href, "scult-stage-screen", features);
+      if (!other || win.closed) return;
+      win.moveTo(other.availLeft, other.availTop);
+      win.resizeTo(other.availWidth, other.availHeight);
+    })
+    .catch(() => {
+      /* permission denied — the presenter can drag the window across */
+    });
+  return true;
 }
 
 export function Presenter({ deck, screenHref, backHref }: { deck: ClientDeck; screenHref: string; backHref: string }) {
   const { source, error, ready } = useSlideSource(deck);
-  const total = Math.max(1, slideCount(source));
-  const stage = useStage({ deckKey: deck.key, count: total, role: "presenter" });
-  const index = Math.min(stage.index, total - 1);
-  const key = slideKey(source, index);
-  const inkKey = stage.board ? `${key}#board` : key;
+  const slideKeys = useSlideKeys(source);
+  const stage = useStage({ deckKey: deck.key, slideKeys, role: "presenter" });
+  const { page, pages } = stage;
+  const index = Math.min(stage.index, Math.max(0, pages.length - 1));
   const [help, setHelp] = useState(false);
+  const [popupBlocked, setPopupBlocked] = useState(false);
   const timer = useTimer();
   const fs = useFullscreen();
+  const currentThumb = useRef<HTMLButtonElement>(null);
 
-  useStageShortcuts(stage, key, {
+  useStageShortcuts(stage, page.key, {
     onFullscreen: fs.toggle,
     onHelp: () => setHelp(true),
     onTimer: (reset) => (reset ? timer.reset() : timer.toggle()),
   });
 
-  const notes = deck.notes[index]?.trim();
-  const hasNext = index < total - 1;
+  useEffect(() => {
+    document.title = `${deck.title} · Scult Stage`;
+  }, [deck.title]);
+
+  // Keep the page on screen visible in the thumbnail strip (new notes slides included).
+  useEffect(() => {
+    currentThumb.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [index, pages.length]);
 
   if (error) {
     return (
@@ -124,15 +136,7 @@ export function Presenter({ deck, screenHref, backHref }: { deck: ClientDeck; sc
   return (
     <div className="bg-night">
       {fs.active ? (
-        <ImmersiveView
-          stage={stage}
-          source={source}
-          index={index}
-          total={total}
-          inkKey={inkKey}
-          fullscreen
-          onToggleFullscreen={fs.toggle}
-        />
+        <ImmersiveView stage={stage} source={source} page={page} fullscreen onToggleFullscreen={fs.toggle} />
       ) : (
         <div className="flex min-h-dvh flex-col lg:h-dvh">
           {/* Top bar */}
@@ -166,10 +170,20 @@ export function Presenter({ deck, screenHref, backHref }: { deck: ClientDeck; sc
             </span>
 
             <div className="flex items-center gap-2">
-              <button type="button" onClick={() => openAudienceScreen(screenHref)} className="btn btn-ghost-dark h-11 px-4 text-sm">
+              {popupBlocked && (
+                <span role="status" className="max-w-48 text-xs leading-snug text-ember-300">
+                  Pop-up blocked. Allow pop-ups for this site, then try again.
+                </span>
+              )}
+              <button
+                type="button"
+                onMouseDown={keepFocus}
+                onClick={() => setPopupBlocked(!openAudienceScreen(screenHref))}
+                className="btn btn-ghost-dark h-11 px-4 text-sm"
+              >
                 <MonitorUp className="size-4" /> Open screen
               </button>
-              <button type="button" onClick={fs.toggle} className="btn btn-matte h-11 px-4 text-sm">
+              <button type="button" onMouseDown={keepFocus} onClick={fs.toggle} className="btn btn-matte h-11 px-4 text-sm">
                 <Maximize className="size-4" /> Present
               </button>
               <ToolButton label="Shortcuts & pen setup" shortcut="?" onClick={() => setHelp(true)}>
@@ -178,64 +192,53 @@ export function Presenter({ deck, screenHref, backHref }: { deck: ClientDeck; sc
             </div>
           </header>
 
-          {/* Main */}
-          <main id="main" className="grid min-h-0 flex-1 gap-3 p-3 sm:gap-4 sm:p-4 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)]">
-            <div className="flex min-h-0 flex-col gap-3">
-              {/* Tablets & phones: full-width 16:9 and the page scrolls. Laptops: fill the height. */}
-              <div className="aspect-video w-full rounded-2xl lg:aspect-auto lg:min-h-[14rem] lg:flex-1">
+          {/* Main: the slide, with the slide tools in a column beside it on laptops */}
+          <main id="main" className="flex min-h-0 flex-1 flex-col gap-3 p-3 sm:p-4">
+            <div className="flex min-h-0 gap-3 lg:min-h-[14rem] lg:flex-1">
+              <div className="aspect-video w-full min-w-0 rounded-2xl lg:aspect-auto lg:h-full lg:flex-1">
                 {ready ? (
-                  <SlideStage stage={stage} source={source} index={index} interactive overlays className="rounded-2xl" />
+                  <SlideStage stage={stage} source={source} page={page} interactive overlays className="rounded-2xl" />
                 ) : (
                   <div className="grid h-full place-items-center rounded-2xl bg-night-2 text-cream-mute">Loading slides…</div>
                 )}
               </div>
-              <div className="flex justify-center">
-                <StageToolbar stage={stage} index={index} total={total} inkKey={inkKey} />
-              </div>
+              <ScreenTools stage={stage} page={page} vertical className="hidden self-center lg:flex" />
             </div>
-
-            <aside className="flex min-h-0 flex-col gap-3">
-              <section className="rounded-2xl border border-night-line bg-night-2 p-3">
-                <p className="mb-2 px-1 font-mono text-[0.62rem] tracking-[0.16em] text-cream-mute uppercase">
-                  {hasNext ? `Next · ${index + 2}` : "End of deck"}
-                </p>
-                <div className="aspect-video overflow-hidden rounded-xl">
-                  {hasNext && ready ? (
-                    <SlideStage stage={stage} source={source} index={index + 1} className="rounded-xl" />
-                  ) : (
-                    <div className="grid h-full place-items-center bg-night text-sm text-cream-mute">That&apos;s the last slide</div>
-                  )}
-                </div>
-              </section>
-              <section className="flex min-h-[10rem] flex-1 flex-col rounded-2xl border border-night-line bg-night-2">
-                <p className="border-b border-night-line px-4 py-3 font-mono text-[0.62rem] tracking-[0.16em] text-cream-mute uppercase">
-                  Speaker notes
-                </p>
-                <div className="flex-1 overflow-y-auto px-4 py-4 text-[1.05rem] leading-relaxed whitespace-pre-wrap text-cream">
-                  {notes || <span className="text-cream-mute">No notes for this slide.</span>}
-                </div>
-              </section>
-            </aside>
+            <div className="flex flex-wrap justify-center gap-2">
+              <DrawTools stage={stage} />
+              <ScreenTools stage={stage} page={page} className="lg:hidden" />
+            </div>
           </main>
 
-          {/* Thumbnails */}
-          {ready && total > 1 && (
+          {/* Thumbnails: every slide, each followed by its notes slides */}
+          {ready && pages.length > 1 && (
             <nav aria-label="Slides" className="border-t border-night-line px-3 py-2.5 sm:px-4">
               <ol className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
-                {Array.from({ length: total }, (_, i) => (
-                  <li key={i} className="shrink-0">
+                {pages.map((p, i) => (
+                  <li key={p.key} className="shrink-0">
                     <button
+                      ref={i === index ? currentThumb : undefined}
                       type="button"
+                      onMouseDown={keepFocus}
                       onClick={() => stage.goto(i)}
-                      aria-label={`Go to slide ${i + 1}`}
+                      aria-label={p.kind === "note" ? `Go to the notes slide after slide ${slideKeys.indexOf(p.after) + 1}` : `Go to slide ${p.slide + 1}`}
                       aria-current={i === index ? "true" : undefined}
                       className={cn(
                         "relative block h-[4.5rem] w-32 overflow-hidden rounded-lg border-2 transition-colors",
                         i === index ? "border-ember-500" : "border-transparent opacity-70 hover:opacity-100",
                       )}
                     >
-                      <SlideStage source={source} index={i} className="pointer-events-none" />
-                      <span className="absolute bottom-1 left-1.5 rounded bg-black/60 px-1 font-mono text-[0.6rem] text-white">{i + 1}</span>
+                      {/* Thumbnails show each page's ink, so annotated slides are easy to find. */}
+                      <SlideStage stage={stage} source={source} page={p} className="pointer-events-none" />
+                      <span className="absolute bottom-1 left-1.5 flex items-center gap-1 rounded bg-black/60 px-1 font-mono text-[0.6rem] text-white">
+                        {p.kind === "note" ? (
+                          <>
+                            <NotebookPen className="size-2.5" /> Notes
+                          </>
+                        ) : (
+                          p.slide + 1
+                        )}
+                      </span>
                     </button>
                   </li>
                 ))}

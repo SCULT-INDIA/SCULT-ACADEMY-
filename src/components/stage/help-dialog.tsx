@@ -20,7 +20,7 @@ const PEN_SETUP = [
       "K1 → P (pen) · K2 → E (eraser) · K3 → H (highlighter) · K4 → L (laser)",
       "K5 → Ctrl+Z (undo) · K6 → Ctrl+Shift+Z (redo)",
       "K7 → → (next slide) · K8 → ← (previous slide)",
-      "Dial or extra keys → G (whiteboard), B (black screen), X (clear slide)",
+      "Dial or extra keys → G (add a notes slide), B (black screen), X (clear slide)",
     ],
   },
   {

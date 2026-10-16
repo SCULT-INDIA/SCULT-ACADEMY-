@@ -6,23 +6,20 @@ import { type ClientDeck, useSlideSource } from "./deck-client";
 import { HelpDialog } from "./help-dialog";
 import { ImmersiveView, useFullscreen } from "./immersive";
 import { useStageShortcuts } from "./shortcuts";
-import { slideCount, slideKey } from "./slide-view";
+import { useSlideKeys } from "./slide-view";
 import { useStage } from "./use-stage";
 
-/** The projector window: slides, ink and laser, mirrored from the presenter. */
+/** The projector window: slides, notes slides, ink and laser, mirrored from the presenter. */
 export function AudienceScreen({ deck }: { deck: ClientDeck }) {
   const { source, error, ready } = useSlideSource(deck);
-  const total = Math.max(1, slideCount(source));
-  const stage = useStage({ deckKey: deck.key, count: total, role: "screen" });
-  const index = Math.min(stage.index, total - 1);
-  const key = slideKey(source, index);
-  const inkKey = stage.board ? `${key}#board` : key;
+  const slideKeys = useSlideKeys(source);
+  const stage = useStage({ deckKey: deck.key, slideKeys, role: "screen" });
   const fs = useFullscreen();
   const [help, setHelp] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const showPrompt = !dismissed && !fs.active;
 
-  useStageShortcuts(stage, key, { onFullscreen: fs.toggle, onHelp: () => setHelp(true) });
+  useStageShortcuts(stage, stage.page.key, { onFullscreen: fs.toggle, onHelp: () => setHelp(true) });
 
   if (error) return <p className="grid h-dvh place-items-center text-cream-mute">{error}</p>;
   if (!ready) return <div className="grid h-dvh place-items-center bg-black text-cream-mute">Loading slides…</div>;
@@ -32,9 +29,7 @@ export function AudienceScreen({ deck }: { deck: ClientDeck }) {
       <ImmersiveView
         stage={stage}
         source={source}
-        index={index}
-        total={total}
-        inkKey={inkKey}
+        page={stage.page}
         fullscreen={fs.active}
         onToggleFullscreen={fs.toggle}
         overlay={

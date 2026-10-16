@@ -5,7 +5,7 @@ import { Maximize, Minimize } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SlideStage, type SlideSource } from "./slide-view";
 import { StageToolbar, ToolButton } from "./toolbar";
-import type { StageApi } from "./use-stage";
+import type { Page, StageApi } from "./use-stage";
 
 /** Toggles page fullscreen; tracks state across Esc / F11. */
 export function useFullscreen() {
@@ -33,9 +33,7 @@ export function useFullscreen() {
 export function ImmersiveView({
   stage,
   source,
-  index,
-  total,
-  inkKey,
+  page,
   fullscreen,
   onToggleFullscreen,
   extraTools,
@@ -43,9 +41,7 @@ export function ImmersiveView({
 }: {
   stage: StageApi;
   source: SlideSource;
-  index: number;
-  total: number;
-  inkKey: string;
+  page: Page;
   fullscreen: boolean;
   onToggleFullscreen: () => void;
   extraTools?: ReactNode;
@@ -67,7 +63,7 @@ export function ImmersiveView({
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black" onPointerMove={wake} onPointerDown={wake}>
-      <SlideStage stage={stage} source={source} index={index} interactive overlays className="h-full w-full" />
+      <SlideStage stage={stage} source={source} page={page} interactive overlays className="h-full w-full" />
       {overlay}
       <div
         className={cn(
@@ -82,9 +78,7 @@ export function ImmersiveView({
         >
           <StageToolbar
             stage={stage}
-            index={index}
-            total={total}
-            inkKey={inkKey}
+            page={page}
             end={
               <>
                 {extraTools}

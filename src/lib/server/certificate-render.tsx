@@ -4,7 +4,6 @@ import { join } from "node:path";
 import { unstable_rethrow } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { PDFDocument } from "pdf-lib";
-import QRCode from "qrcode";
 import { LOGO_ORANGE, PETAL_H, PETAL_V } from "@/components/ui/logo";
 import { type CertificateView } from "./certificates";
 import { contentMime, readContentBytes } from "./content";
@@ -116,18 +115,11 @@ function Corner({ s, color, pos }: { s: number; color: string; pos: "tl" | "tr" 
 }
 
 async function certificateElement(view: CertificateView, s: number) {
-  const [logo, qr, signatures] = await Promise.all([
+  const [logo, signatures] = await Promise.all([
     partnerLogo,
-    QRCode.toDataURL(view.verifyUrl, {
-      margin: 0,
-      width: Math.round(110 * s),
-      errorCorrectionLevel: "M",
-      color: { dark: C.navy, light: "#00000000" },
-    }),
     Promise.all(view.signatories.map((sig) => contentImage(sig.signature))),
   ]);
   const px = (n: number) => n * s;
-  const verifyLabel = view.verifyUrl.replace(/^https?:\/\//, "");
 
   return (
     <div
@@ -278,34 +270,20 @@ async function certificateElement(view: CertificateView, s: number) {
         ))}
       </div>
 
-      {/* Footer: number + verification */}
+      {/* Footer: the certificate number from the registration sheet */}
       <div
         style={{
           position: "absolute",
           left: px(56),
-          right: px(60),
-          bottom: px(44),
+          bottom: px(46),
           display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
+          fontSize: px(10.5),
+          fontWeight: 700,
+          letterSpacing: px(1.2),
+          color: C.slate,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: px(3) }}>
-          <span style={{ fontSize: px(10.5), fontWeight: 700, letterSpacing: px(1), color: C.slate }}>
-            CERTIFICATE NO. {view.id}
-          </span>
-          <span style={{ fontSize: px(9.5), fontWeight: 500, letterSpacing: px(1), color: C.slate }}>
-            VERIFICATION CODE {view.code}
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: px(10) }}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: px(2) }}>
-            <span style={{ fontSize: px(9.5), fontWeight: 700, letterSpacing: px(1), color: C.navy }}>SCAN TO VERIFY</span>
-            <span style={{ fontSize: px(8.5), color: C.slate }}>{verifyLabel}</span>
-          </div>
-          {/* eslint-disable-next-line @next/next/no-img-element -- rendered by ImageResponse, not the browser */}
-          <img src={qr} alt="" width={px(58)} height={px(58)} />
-        </div>
+        CERTIFICATE NO. {view.id}
       </div>
     </div>
   );

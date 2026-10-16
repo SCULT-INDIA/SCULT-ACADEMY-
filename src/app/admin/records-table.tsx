@@ -12,7 +12,6 @@ export type AdminRecord = {
   email: string;
   college: string;
   status: "issued" | "revoked";
-  verifyUrl: string;
 };
 
 const base = (r: AdminRecord) => `/certificates/${encodeURIComponent(r.id)}/${encodeURIComponent(r.code)}`;
@@ -59,7 +58,7 @@ export function RecordsTable({ records, workshopTitle }: { records: AdminRecord[
 
   const copy = async (r: AdminRecord) => {
     try {
-      await navigator.clipboard.writeText(r.verifyUrl);
+      await navigator.clipboard.writeText(`${window.location.origin}${base(r)}/pdf`);
       setCopied(r.id);
       setTimeout(() => setCopied(null), 1500);
     } catch {
@@ -125,7 +124,7 @@ export function RecordsTable({ records, workshopTitle }: { records: AdminRecord[
                     <a href={`${base(r)}/pdf`} aria-label={`Download ${r.name}'s certificate PDF`} title="Download PDF" className="grid size-9 place-items-center rounded-lg text-cream-mute hover:bg-night-3 hover:text-cream">
                       <Download className="size-4" />
                     </a>
-                    <button type="button" onClick={() => copy(r)} aria-label={`Copy ${r.name}'s verify link`} title="Copy verify link" className="grid size-9 place-items-center rounded-lg text-cream-mute hover:bg-night-3 hover:text-cream">
+                    <button type="button" onClick={() => copy(r)} aria-label={`Copy ${r.name}'s certificate download link`} title="Copy download link (to send to the student)" className="grid size-9 place-items-center rounded-lg text-cream-mute hover:bg-night-3 hover:text-cream">
                       {copied === r.id ? <Check className="size-4 text-[#5fd3a6]" /> : <Copy className="size-4" />}
                     </button>
                   </div>

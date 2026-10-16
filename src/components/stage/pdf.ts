@@ -27,7 +27,10 @@ export function usePdfDocument(source: PdfSource | null) {
     loadPdfjs()
       .then((pdfjs) => {
         const loading = pdfjs.getDocument(
-          "url" in source ? { url: source.url, withCredentials: true } : { data: source.data.slice() },
+          // Same-origin credentials carry the team cookie to /stage/assets; big decks redirect
+          // to GitHub, which allows any origin but not credentials. One full fetch instead of
+          // range requests, so the redirect (and its GitHub lookup) happens once.
+          "url" in source ? { url: source.url, disableRange: true } : { data: source.data.slice() },
         );
         task = loading;
         if (cancelled) loading.destroy();

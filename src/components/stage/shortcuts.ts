@@ -20,9 +20,9 @@ export const SHORTCUTS: { keys: string; action: string; group: "Navigate" | "Dra
   { keys: "I  A  R  O", action: "Line · Arrow · Rectangle · Ellipse", group: "Draw" },
   { keys: "1 – 7", action: "Ink colour", group: "Draw" },
   { keys: "[  ]", action: "Thinner / thicker", group: "Draw" },
-  { keys: "Ctrl Z / Ctrl Shift Z", action: "Undo / redo", group: "Draw" },
+  { keys: "Ctrl Z / Ctrl Shift Z", action: "Undo / redo on this slide", group: "Draw" },
   { keys: "X", action: "Clear ink on this slide", group: "Draw" },
-  { keys: "G", action: "Whiteboard for this slide", group: "Present" },
+  { keys: "G", action: "Add a notes slide after this one", group: "Present" },
   { keys: "B / W", action: "Black / white screen", group: "Present" },
   { keys: "S", action: "Spotlight", group: "Present" },
   { keys: "F", action: "Fullscreen present", group: "Present" },
@@ -49,6 +49,7 @@ type Extra = {
   onTimer?: (reset: boolean) => void;
 };
 
+/** `inkKey` is the page on screen: undo, redo and clear act on it. */
 export function useStageShortcuts(stage: StageApi, inkKey: string, extra: Extra = {}) {
   const ref = useRef({ stage, inkKey, extra });
   useEffect(() => {
@@ -57,21 +58,24 @@ export function useStageShortcuts(stage: StageApi, inkKey: string, extra: Extra 
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return;
       const t = e.target as HTMLElement | null;
       if (t && (t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName))) return;
-      const { stage: s, inkKey: key, extra: x } = ref.current;
+      // Someone who tabbed to a button presses Enter/Space to use it, not to change slides.
+      if ((e.key === "Enter" || e.key === " ") && t?.closest("button, a[href], summary, [role='button']")) return;
+      const { stage: s, inkKey: ink, extra: x } = ref.current;
       const mod = e.ctrlKey || e.metaKey;
       const k = e.key.toLowerCase();
 
       if (mod && k === "z") {
         e.preventDefault();
-        if (e.shiftKey) s.redo();
-        else s.undo();
+        if (e.shiftKey) s.redo(ink);
+        else s.undo(ink);
         return;
       }
       if (mod && k === "y") {
         e.preventDefault();
-        s.redo();
+        s.redo(ink);
         return;
       }
       if (mod || e.altKey) return;
@@ -130,9 +134,9 @@ export function useStageShortcuts(stage: StageApi, inkKey: string, extra: Extra 
       }
       if (k === "b") s.setBlank(s.blank === "black" ? null : "black");
       else if (k === "w") s.setBlank(s.blank === "white" ? null : "white");
-      else if (k === "g") s.setBoard(!s.board);
+      else if (k === "g") s.addNotePage();
       else if (k === "s") s.setSpotlight(!s.spotlight);
-      else if (k === "x") s.clearKey(s.board ? `${key}#board` : key);
+      else if (k === "x") s.clearKey(ink);
       else if (k === "f") x.onFullscreen?.();
       else if (k === "t") x.onTimer?.(e.shiftKey);
     };

@@ -1,4 +1,3 @@
-import { site } from "@/lib/site";
 import { renderCertificatePng } from "@/lib/server/certificate-render";
 import { getWorkshop } from "@/lib/server/workshops";
 
@@ -18,7 +17,6 @@ export async function GET(_request: Request, ctx: RouteContext<"/workshops/[slug
       title: workshop.title,
       subtitle: workshop.subtitle,
       dateLabel: workshop.dateLabel,
-      isoDate: workshop.date,
       kind: cert.kind,
       statement: cert.statement,
       description: cert.description,
@@ -27,7 +25,6 @@ export async function GET(_request: Request, ctx: RouteContext<"/workshops/[slug
       partner: workshop.partner,
       releaseAt: cert.releaseAt,
       released: true,
-      verifyUrl: `${site.url}/verify`,
       signatories: cert.signatories,
     },
     1.4,

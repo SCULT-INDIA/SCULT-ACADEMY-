@@ -8,19 +8,9 @@ export type ClientDeck = {
   theme: DeckTheme;
   markdown?: SlideData[];
   pdf?: { url: string } | { data: Uint8Array };
-  notes: string[];
 };
 
 export function toClientDeck(deck: DeckData): ClientDeck {
-  if (deck.kind === "markdown") {
-    return {
-      key: `deck:${deck.slug}`,
-      title: deck.title,
-      event: deck.event,
-      theme: deck.theme,
-      markdown: deck.slides,
-      notes: deck.slides.map((s) => s.notes),
-    };
-  }
-  return { key: `deck:${deck.slug}`, title: deck.title, event: deck.event, theme: deck.theme, pdf: { url: deck.pdfUrl }, notes: deck.notes };
+  const base = { key: `deck:${deck.slug}`, title: deck.title, event: deck.event, theme: deck.theme };
+  return deck.kind === "markdown" ? { ...base, markdown: deck.slides } : { ...base, pdf: { url: deck.pdfUrl } };
 }

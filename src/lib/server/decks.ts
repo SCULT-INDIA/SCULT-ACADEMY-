@@ -2,6 +2,7 @@ import "server-only";
 import { unstable_rethrow } from "next/navigation";
 import { Marked, type Tokens } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 import type { DeckData, DeckMeta, DeckSummary, DeckTheme, SlideData, SlideLayout } from "@/lib/stage/types";
 import { listContentDir, readContentText } from "./content";
 
@@ -17,8 +18,9 @@ const LANGS = ["python", "javascript", "typescript", "tsx", "jsx", "json", "bash
 const LANG_ALIASES: Record<string, string> = { py: "python", js: "javascript", ts: "typescript", sh: "bash", shell: "bash", zsh: "bash", md: "markdown", yml: "yaml" };
 
 let highlighter: Promise<Highlighter> | null = null;
+// The JavaScript regex engine needs no WebAssembly, so it loads the same way on every serverless runtime.
 const getHighlighter = () =>
-  (highlighter ??= createHighlighter({ themes: ["github-dark-default"], langs: [...LANGS] }));
+  (highlighter ??= createHighlighter({ themes: ["github-dark-default"], langs: [...LANGS], engine: createJavaScriptRegexEngine() }));
 
 const assetUrl = (slug: string, src: string) =>
   /^(https?:|data:|\/)/.test(src) ? src : `/stage/assets/decks/${slug}/${src.replace(/^\.\//, "")}`;

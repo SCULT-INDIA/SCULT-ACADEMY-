@@ -1,5 +1,5 @@
 import "server-only";
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import { dirname, join, normalize, resolve, sep } from "node:path";
 import { cacheLife, cacheTag } from "next/cache";
 import { env } from "./env";
@@ -60,27 +60,59 @@ type Read<T> = { ok: true; value: T } | { ok: false; error: string };
 
 const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
 
-async function cachedBytes(path: string): Promise<Read<Uint8Array | null>> {
-  "use cache";
-  cacheTag(CONTENT_TAG);
+/** Cache lifetime for content reads. Call inside a "use cache" scope tagged CONTENT_TAG. */
+function contentCacheLife() {
   // Local checkouts refresh within seconds; GitHub reads are cached a little longer.
   // Both expire after ≥ 5 minutes so pages using them can still be prerendered.
   if (env.contentDir) cacheLife({ stale: 30, revalidate: 2, expire: 600 });
   else cacheLife("minutes");
+}
 
+/** Reads a content file (null when missing). Throws ContentError if unreachable. */
+async function fetchContentBytes(path: string): Promise<Uint8Array | null> {
+  if (env.contentDir) {
+    try {
+      return new Uint8Array(await readFile(localPath(path)));
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+      throw new ContentError(message(error));
+    }
+  }
+  const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github.raw+json") });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new ContentError(`GitHub content read failed (${res.status}) for ${path}`);
+  return new Uint8Array(await res.arrayBuffer());
+}
+
+async function cachedBytes(path: string): Promise<Read<Uint8Array | null>> {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  contentCacheLife();
+  try {
+    return { ok: true, value: await fetchContentBytes(path) };
+  } catch (error) {
+    return { ok: false, error: message(error) };
+  }
+}
+
+async function cachedSize(path: string): Promise<Read<number | null>> {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  contentCacheLife();
   try {
     if (env.contentDir) {
       try {
-        return { ok: true, value: new Uint8Array(await readFile(localPath(path))) };
+        return { ok: true, value: (await stat(localPath(path))).size };
       } catch (error) {
         if ((error as NodeJS.ErrnoException).code === "ENOENT") return { ok: true, value: null };
         throw error;
       }
     }
-    const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github.raw+json") });
+    const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github+json") });
     if (res.status === 404) return { ok: true, value: null };
     if (!res.ok) return { ok: false, error: `GitHub content read failed (${res.status}) for ${path}` };
-    return { ok: true, value: new Uint8Array(await res.arrayBuffer()) };
+    const info = (await res.json()) as { type?: string; size?: number };
+    return { ok: true, value: info.type === "file" && typeof info.size === "number" ? info.size : null };
   } catch (error) {
     return { ok: false, error: message(error) };
   }
@@ -91,8 +123,7 @@ type Entry = { name: string; type: "file" | "dir" };
 async function cachedDir(path: string): Promise<Read<Entry[]>> {
   "use cache";
   cacheTag(CONTENT_TAG);
-  if (env.contentDir) cacheLife({ stale: 30, revalidate: 2, expire: 600 });
-  else cacheLife("minutes");
+  contentCacheLife();
 
   try {
     if (env.contentDir) {
@@ -124,6 +155,26 @@ export async function readContentBytes(path: string): Promise<Uint8Array | null>
   const result = await cachedBytes(path);
   if (!result.ok) throw new ContentError(result.error);
   return result.value;
+}
+
+/** Size in bytes of a content file, or null when it doesn't exist. Throws ContentError if unreachable. */
+export async function contentFileSize(path: string): Promise<number | null> {
+  const result = await cachedSize(path);
+  if (!result.ok) throw new ContentError(result.error);
+  return result.value;
+}
+
+/**
+ * A short-lived direct link to a file in the GitHub repo, so big files skip
+ * the server (Vercel functions can't return bodies over 4.5 MB). Null when
+ * content is a local checkout or the file is missing. Never cache the result.
+ */
+export async function contentDownloadUrl(path: string): Promise<string | null> {
+  if (env.contentDir) return null;
+  const res = await fetch(githubUrl(path), { headers: githubHeaders("application/vnd.github+json") });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new ContentError(`GitHub content read failed (${res.status}) for ${path}`);
+  return ((await res.json()) as { download_url?: string | null }).download_url ?? null;
 }
 
 export async function readContentText(path: string) {

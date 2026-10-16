@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import type { DeckTheme, SlideData } from "@/lib/stage/types";
 import { LogoMark } from "@/components/ui/logo";
 import { cn } from "@/lib/utils";
 import { InkLayer } from "./ink-layer";
 import { renderPdfPage } from "./pdf";
-import type { StageApi, StageMessage } from "./use-stage";
+import type { Page, StageApi, StageMessage } from "./use-stage";
 
 /* ──────────────────────────────────────────────────────────────
-   One 16:9 slide box, fitted to its container, with every layer:
-   slide → whiteboard → ink → spotlight → blank screen.
+   One 16:9 page box, fitted to its container, with every layer:
+   slide (or a notes slide's blank page) → ink → spotlight → blank screen.
    ────────────────────────────────────────────────────────────── */
 
 export type SlideSource =
@@ -22,6 +22,12 @@ export const slideKey = (source: SlideSource, index: number) =>
   source.kind === "markdown" ? (source.slides[index]?.id ?? `s${index + 1}`) : `p${index + 1}`;
 
 export const slideCount = (source: SlideSource) => (source.kind === "markdown" ? source.slides.length : source.pageCount);
+
+/** Stable list of slide keys (only changes when the slides do). */
+export function useSlideKeys(source: SlideSource) {
+  const joined = Array.from({ length: slideCount(source) }, (_, i) => slideKey(source, i)).join("\n");
+  return useMemo(() => (joined ? joined.split("\n") : []), [joined]);
+}
 
 /** Tracks an element's content box size. */
 export function useBox<T extends HTMLElement>() {
@@ -115,6 +121,7 @@ function PdfSlide({ doc, index, width, height }: { doc: PDFDocumentProxy | null;
   );
 }
 
+/** The blank, lightly dotted page of a notes slide. */
 export function Whiteboard() {
   return (
     <div
@@ -130,7 +137,7 @@ export function Whiteboard() {
 type SlideStageProps = {
   stage?: StageApi;
   source: SlideSource;
-  index: number;
+  page: Page;
   /** Accept pen/mouse input on this surface. */
   interactive?: boolean;
   /** Show board / blank / spotlight overlays (main surfaces only). */
@@ -139,14 +146,12 @@ type SlideStageProps = {
   children?: ReactNode;
 };
 
-/** A fitted slide with ink. Previews pass `stage` for read-only ink, or omit it. */
-export function SlideStage({ stage, source, index, interactive = false, overlays = false, className, children }: SlideStageProps) {
+/** A fitted page with ink. Previews pass `stage` for read-only ink, or omit it. */
+export function SlideStage({ stage, source, page, interactive = false, overlays = false, className, children }: SlideStageProps) {
   const [ref, size] = useBox<HTMLDivElement>();
   const box = fit(size.width, size.height);
   const total = slideCount(source);
-  const key = slideKey(source, index);
-  const boardOn = overlays && !!stage?.board;
-  const inkKey = boardOn ? `${key}#board` : key;
+  const index = page.kind === "slide" ? page.slide : -1;
 
   // Spotlight follows the local pointer, or the other window's cursor.
   const [spot, setSpot] = useState<{ x: number; y: number } | null>(null);
@@ -157,7 +162,7 @@ export function SlideStage({ stage, source, index, interactive = false, overlays
     });
   }, [stage, overlays]);
 
-  const slide = source.kind === "markdown" ? source.slides[index] : null;
+  const slide = source.kind === "markdown" && index >= 0 ? source.slides[index] : null;
 
   return (
     <div ref={ref} className={cn("relative grid h-full w-full place-items-center", className)}>
@@ -173,17 +178,15 @@ export function SlideStage({ stage, source, index, interactive = false, overlays
             stage.post({ t: "cursor", ...p });
           }}
         >
-          {source.kind === "markdown" && slide ? (
+          {page.kind === "note" ? (
+            <Whiteboard />
+          ) : source.kind === "markdown" && slide ? (
             <MarkdownSlide slide={slide} theme={source.theme} event={source.event} index={index} total={total} scale={box.width / 1600} />
           ) : source.kind === "pdf" ? (
             <PdfSlide doc={source.doc} index={index} width={box.width} height={box.height} />
           ) : null}
 
-          {boardOn && <Whiteboard />}
-
-          {stage && (
-            <InkLayer stage={stage} inkKey={inkKey} width={box.width} height={box.height} interactive={interactive} />
-          )}
+          {stage && <InkLayer stage={stage} inkKey={page.key} width={box.width} height={box.height} interactive={interactive} />}
 
           {overlays && stage?.spotlight && (
             <div

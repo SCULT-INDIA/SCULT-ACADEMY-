@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft, CalendarClock, ExternalLink, LogOut, RefreshCw, Users } from "lucide-react";
 import { requireTeam } from "@/lib/server/auth";
-import { contentImageDataUrl, getRecords, isReleased, toView, verifyPath } from "@/lib/server/certificates";
+import { contentImageDataUrl, getRecords, isReleased } from "@/lib/server/certificates";
 import { listWorkshops } from "@/lib/server/workshops";
 import { LogoMark } from "@/components/ui/logo";
 import { logout } from "../login/actions";
@@ -65,17 +65,15 @@ async function Workshops() {
         workshops.map(async (w) => {
           const cert = w.certificate!;
           const records = await getRecords(w);
-          const views = records.map((r) => ({ r, v: toView(w, r) }));
           const released = isReleased(cert.releaseAt);
           const signatures = await Promise.all(cert.signatories.map((s) => contentImageDataUrl(s.signature).catch(() => null)));
-          const rows: AdminRecord[] = views.map(({ r, v }) => ({
+          const rows: AdminRecord[] = records.map((r) => ({
             id: r.id,
             code: r.code,
             name: r.name,
             email: r.email,
             college: r.college,
             status: r.status,
-            verifyUrl: v.verifyUrl,
           }));
           const sample = records.find((r) => r.status === "issued");
 
@@ -135,12 +133,6 @@ async function Workshops() {
                     {/* eslint-disable-next-line @next/next/no-img-element -- server-rendered certificate */}
                     <img src={`/certificates/${sample.id}/${sample.code}/image`} alt={`Certificate preview for ${sample.name}`} width={2000} height={1350} className="h-auto w-full" />
                   </a>
-                  <p className="mt-2 text-sm text-cream-mute">
-                    Verify page:{" "}
-                    <Link href={verifyPath(sample.id, sample.code)} className="text-cream underline-offset-4 hover:underline" target="_blank">
-                      {verifyPath(sample.id, sample.code)}
-                    </Link>
-                  </p>
                 </>
               )}
 

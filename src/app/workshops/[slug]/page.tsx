@@ -226,10 +226,10 @@ function CertificateSection({ w }: { w: Workshop }) {
                   Proof you <Accent className="text-ember-400">built it.</Accent>
                 </>
               }
-              description={`Every participant receives a verifiable certificate co-issued by ${w.organizer} and ${w.partner}.`}
+              description={`Every participant receives a certificate co-issued by ${w.organizer} and ${w.partner}, carrying their own certificate number.`}
             />
             <ul className="mt-8 space-y-3">
-              {["QR code + verification code on every certificate", "Print-ready PDF and shareable PNG", "One-click add to LinkedIn"].map((t) => (
+              {["Your allotted certificate number on every certificate", "Print-ready PDF download", "PNG image download"].map((t) => (
                 <li key={t} className="flex items-center gap-3 text-cream">
                   <span className="grid size-5 place-items-center rounded-full" style={{ background: GREEN }}>
                     <Check className="size-3 text-white" strokeWidth={3} />
