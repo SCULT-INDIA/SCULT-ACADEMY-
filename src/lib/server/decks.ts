@@ -13,7 +13,7 @@ import { listContentDir, readContentText } from "./content";
    ────────────────────────────────────────────────────────────── */
 
 const LAYOUTS: SlideLayout[] = ["default", "title", "section", "statement", "steps", "two-column", "stat", "quote", "image", "whiteboard"];
-const THEMES: DeckTheme[] = ["scult", "collab", "night"];
+const THEMES: DeckTheme[] = ["scult", "collab", "night", "brutal"];
 const LANGS = ["python", "javascript", "typescript", "tsx", "jsx", "json", "bash", "markdown", "html", "css", "sql", "yaml"] as const;
 const LANG_ALIASES: Record<string, string> = { py: "python", js: "javascript", ts: "typescript", sh: "bash", shell: "bash", zsh: "bash", md: "markdown", yml: "yaml" };
 
@@ -69,6 +69,19 @@ function splitOutsideFences(text: string, isSeparator: (line: string) => boolean
   return chunks.map((c) => c.join("\n"));
 }
 
+/** Standalone image lines (outside code) become the slide's figure, shown beside the text. */
+function takeFigure(content: string) {
+  const text: string[] = [];
+  const figure: string[] = [];
+  let fence = false;
+  for (const line of content.split(/\r?\n/)) {
+    if (/^\s*(```|~~~)/.test(line)) fence = !fence;
+    if (!fence && /^\s*!\[[^\]]*\]\([^)]*\)\s*$/.test(line)) figure.push(line.trim());
+    else text.push(line);
+  }
+  return { text: text.join("\n"), figure: figure.join("\n\n") };
+}
+
 export function parseDeckMarkdown(slug: string, source: string, hl: Highlighter): { meta: DeckMeta; slides: SlideData[] } {
   let text = source.replace(/^﻿/, "");
   let metaRaw: Record<string, string> = {};
@@ -99,7 +112,7 @@ export function parseDeckMarkdown(slug: string, source: string, hl: Highlighter)
     }
     const [content, ...noteParts] = splitOutsideFences(body, (l) => l.trim() === "???");
     const layout = LAYOUTS.includes(directives.layout as SlideLayout) ? (directives.layout as SlideLayout) : "default";
-    const bg = ["paper", "night", "ember"].includes(directives.bg) ? (directives.bg as SlideData["bg"]) : undefined;
+    const bg = ["paper", "night", "ember", "sun"].includes(directives.bg) ? (directives.bg as SlideData["bg"]) : undefined;
 
     const slide: SlideData = {
       id: `s${index + 1}`,
@@ -116,8 +129,13 @@ export function parseDeckMarkdown(slug: string, source: string, hl: Highlighter)
       const headingMatch = left.match(/^\s*(#{1,2} [^\n]+)\n?/);
       slide.html = headingMatch ? render(headingMatch[1]) : "";
       slide.columns = [render(headingMatch ? left.slice(headingMatch[0].length) : left), render(cols.slice(1).join("\n"))];
-    } else {
+    } else if (layout === "image") {
       slide.html = render(content);
+    } else {
+      // Any other slide with a standalone image: text on the left, the image beside it.
+      const { text, figure } = takeFigure(content);
+      slide.html = render(text);
+      if (figure) slide.figure = render(figure);
     }
     slides.push(slide);
   });

@@ -60,17 +60,31 @@ function MarkdownSlide({ slide, theme, event, index, total, scale }: { slide: Sl
       data-theme={theme}
       data-layout={slide.layout}
       data-bg={slide.bg}
+      data-figure={slide.figure ? "" : undefined}
       style={{ transform: `scale(${scale})` }}
     >
-      {showWatermark && <LogoMark className="slide-brand-mark" />}
+      {showWatermark && !slide.figure && <LogoMark className="slide-brand-mark" />}
       <div className="slide-body">
-        {slide.kicker && <div className="slide-kicker">{slide.kicker}</div>}
-        {slide.html && <div dangerouslySetInnerHTML={{ __html: slide.html }} />}
-        {slide.columns && (
-          <div className="slide-columns">
-            <div className="slide-col" dangerouslySetInnerHTML={{ __html: slide.columns[0] }} />
-            <div className="slide-col" dangerouslySetInnerHTML={{ __html: slide.columns[1] }} />
+        {slide.figure ? (
+          // Text on the left, the slide's illustration beside it.
+          <div className="slide-split">
+            <div className="slide-text">
+              {slide.kicker && <div className="slide-kicker">{slide.kicker}</div>}
+              {slide.html && <div dangerouslySetInnerHTML={{ __html: slide.html }} />}
+            </div>
+            <div className="slide-figure" dangerouslySetInnerHTML={{ __html: slide.figure }} />
           </div>
+        ) : (
+          <>
+            {slide.kicker && <div className="slide-kicker">{slide.kicker}</div>}
+            {slide.html && <div dangerouslySetInnerHTML={{ __html: slide.html }} />}
+            {slide.columns && (
+              <div className="slide-columns">
+                <div className="slide-col" dangerouslySetInnerHTML={{ __html: slide.columns[0] }} />
+                <div className="slide-col" dangerouslySetInnerHTML={{ __html: slide.columns[1] }} />
+              </div>
+            )}
+          </>
         )}
       </div>
       <div className="slide-chrome">

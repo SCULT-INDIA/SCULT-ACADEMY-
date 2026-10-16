@@ -15,16 +15,18 @@ export type SlideLayout =
   | "image"
   | "whiteboard";
 
-export type DeckTheme = "scult" | "collab" | "night";
+export type DeckTheme = "scult" | "collab" | "night" | "brutal";
 
 export type SlideData = {
   id: string;
   layout: SlideLayout;
   kicker?: string;
-  bg?: "paper" | "night" | "ember";
+  bg?: "paper" | "night" | "ember" | "sun";
   /** Rendered HTML. two-column slides use `columns` instead. */
   html: string;
   columns?: [string, string];
+  /** Rendered image(s) shown beside the text (any layout except two-column and image). */
+  figure?: string;
   notes: string;
 };
 

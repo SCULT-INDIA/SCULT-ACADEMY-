@@ -343,6 +343,517 @@
   margin-bottom: 14px;
 }
 
+/* Card grids: numbered (ol) or plain (ul). Two, four and eight items get
+   matching columns; seven or more get compact cards. */
+.slide[data-layout="steps"] ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 44px;
+}
+.slide[data-layout="steps"] ul > li {
+  margin: 0;
+  padding: 30px 30px 32px;
+  border-radius: 28px;
+  border: 2px solid var(--s-line);
+  background: var(--s-card);
+  font-size: 27px;
+  line-height: 1.35;
+}
+.slide[data-layout="steps"] ul > li::before {
+  position: static;
+  display: block;
+  width: 46px;
+  height: 7px;
+  margin-bottom: 22px;
+  border-radius: 999px;
+}
+.slide[data-layout="steps"] :is(ol, ul):has(> li:nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.slide[data-layout="steps"] :is(ol, ul):has(> li:nth-child(8):last-child) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.slide[data-layout="steps"] :is(ol, ul):has(> li:nth-child(7)) {
+  gap: 16px;
+  margin-top: 34px;
+}
+.slide[data-layout="steps"] ol:has(> li:nth-child(7)) > li {
+  min-height: 0;
+  padding: 72px 24px 22px;
+  border-radius: 22px;
+  font-size: 23px;
+}
+.slide[data-layout="steps"] ol:has(> li:nth-child(7)) > li::before {
+  left: 24px;
+  top: 22px;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+}
+.slide[data-layout="steps"] ul:has(> li:nth-child(7)) > li {
+  padding: 22px 24px 24px;
+  border-radius: 22px;
+  font-size: 23px;
+}
+
+/* Text beside an illustration */
+.slide-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  align-items: center;
+  gap: 64px;
+}
+.slide-figure p {
+  margin: 0;
+}
+.slide-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 660px;
+  border-radius: 0;
+}
+.slide[data-figure] h1 {
+  font-size: 68px;
+}
+.slide[data-figure][data-layout="title"] h1 {
+  font-size: 92px;
+}
+.slide[data-figure][data-layout="title"] h2 {
+  font-size: 48px;
+}
+.slide[data-figure][data-layout="section"] h1 {
+  font-size: 112px;
+}
+.slide[data-figure][data-layout="statement"] .slide-body {
+  align-items: stretch;
+  text-align: left;
+}
+.slide[data-figure][data-layout="statement"] p {
+  font-size: 64px;
+}
+
+/* ── Theme: brutal (neo-brutalist) ───────────────────────────
+   Thick ink borders, hard offset shadows, flat brand colour.
+   Slides compose the building blocks below in raw HTML:
+   .tag .box .chip .grid/.g2–.g5 .split .flow .window .msg .big …
+   ────────────────────────────────────────────────────────────── */
+.slide[data-theme="brutal"] {
+  --s-paper: #f7f3ec;
+  --s-ink: #17130f;
+  --s-soft: #443d35;
+  --s-mute: #7a7166;
+  --s-line: #17130f;
+  --s-accent: #ea6526;
+  --s-accent-2: #f6c244;
+  --s-card: #ffffff;
+  --b: 3px solid #17130f;
+  --sh: 8px 8px 0 #17130f;
+  --sh-s: 4px 4px 0 #17130f;
+}
+.slide[data-theme="brutal"][data-bg="sun"] {
+  --s-paper: #f6c244;
+  --s-soft: #2b251f;
+  --s-mute: #4a3f2c;
+}
+.slide[data-theme="brutal"][data-bg="ember"] {
+  --s-paper: #ea6526;
+  --s-ink: #17130f;
+  --s-soft: #17130f;
+  --s-mute: rgb(23 19 15 / 0.7);
+  --s-accent: #17130f;
+  --s-accent-2: #f6c244;
+}
+.slide[data-theme="brutal"] h1 {
+  font-weight: 800;
+  font-size: 80px;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+.slide[data-theme="brutal"] h2 {
+  margin-top: 20px;
+  font-family: var(--font-geist), sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 1.35;
+  color: var(--s-soft);
+}
+.slide[data-theme="brutal"] p,
+.slide[data-theme="brutal"] li {
+  font-size: 28px;
+}
+.slide[data-theme="brutal"] strong {
+  box-shadow: none;
+  padding: 0 0.14em;
+  border-radius: 4px;
+  background: var(--s-accent-2);
+  color: #17130f;
+}
+.slide[data-theme="brutal"] .slide-kicker {
+  align-self: flex-start;
+  width: fit-content;
+  margin-bottom: 30px;
+  padding: 10px 16px;
+  border: var(--b);
+  background: #f6c244;
+  box-shadow: 5px 5px 0 #17130f;
+  font: 700 18px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.1em;
+  color: #17130f;
+}
+.slide[data-theme="brutal"][data-bg="sun"] .slide-kicker {
+  background: #fff;
+}
+.slide[data-theme="brutal"] .slide-kicker::before {
+  display: none;
+}
+.slide[data-theme="brutal"] .slide-chrome {
+  color: var(--s-mute);
+}
+.slide[data-theme="brutal"] ul > li::before {
+  top: 0.42em;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2.5px solid #17130f;
+  background: var(--s-accent-2);
+}
+.slide[data-theme="brutal"] ol > li::before {
+  border-radius: 10px;
+  border: 2.5px solid #17130f;
+  background: var(--s-accent-2);
+  color: #17130f;
+  box-shadow: 3px 3px 0 #17130f;
+  font-weight: 700;
+}
+.slide[data-theme="brutal"] pre {
+  border: var(--b);
+  border-radius: 18px;
+  box-shadow: 8px 8px 0 #f6c244, 8px 8px 0 3px #17130f;
+}
+.slide[data-theme="brutal"][data-layout="statement"] p {
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+/* Building blocks */
+.slide[data-theme="brutal"] .lede {
+  margin: 22px 0 0;
+  max-width: 1150px;
+  font-size: 33px;
+  line-height: 1.4;
+  color: var(--s-soft);
+}
+.slide[data-theme="brutal"] .tag {
+  display: inline-block;
+  padding: 9px 16px;
+  border: var(--b);
+  background: #f6c244;
+  box-shadow: 5px 5px 0 #17130f;
+  font: 700 18px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #17130f;
+}
+.slide[data-theme="brutal"] .tag.white {
+  background: #fff;
+}
+.slide[data-theme="brutal"] .tag.ember {
+  background: #ea6526;
+  color: #fff;
+}
+.slide[data-theme="brutal"] .tag.ink {
+  background: #17130f;
+  color: #fff;
+}
+.slide[data-theme="brutal"] .box {
+  position: relative;
+  padding: 26px 28px;
+  border: var(--b);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--sh);
+  color: #17130f;
+}
+.slide[data-theme="brutal"] .box.s {
+  padding: 18px 22px;
+  box-shadow: var(--sh-s);
+  border-radius: 14px;
+}
+.slide[data-theme="brutal"] .sun {
+  background: #f6c244;
+}
+.slide[data-theme="brutal"] .butter {
+  background: #fdf2cf;
+}
+.slide[data-theme="brutal"] .peach {
+  background: #fbe3d2;
+}
+.slide[data-theme="brutal"] .paper {
+  background: #f7f3ec;
+}
+.slide[data-theme="brutal"] .ember {
+  background: #ea6526;
+  color: #fff;
+}
+.slide[data-theme="brutal"] .ink {
+  background: #17130f;
+  color: #fff;
+}
+.slide[data-theme="brutal"] .box .k {
+  display: block;
+  font: 700 18px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.slide[data-theme="brutal"] .box h3 {
+  margin: 16px 0 0;
+  font: 800 36px/1.05 var(--font-bricolage), sans-serif;
+  letter-spacing: -0.03em;
+  color: inherit;
+}
+.slide[data-theme="brutal"] .box .k + h3 {
+  margin-top: 14px;
+}
+.slide[data-theme="brutal"] .box h3:first-child {
+  margin-top: 0;
+}
+.slide[data-theme="brutal"] .box p {
+  margin: 10px 0 0;
+  font-size: 23px;
+  line-height: 1.38;
+  color: inherit;
+  opacity: 0.86;
+}
+.slide[data-theme="brutal"] .grid {
+  display: grid;
+  gap: 28px;
+  align-items: stretch;
+}
+.slide[data-theme="brutal"] .g2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.slide[data-theme="brutal"] .g3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.slide[data-theme="brutal"] .g4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.slide[data-theme="brutal"] .g5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.slide[data-theme="brutal"] .mt1 {
+  margin-top: 28px;
+}
+.slide[data-theme="brutal"] .mt2 {
+  margin-top: 44px;
+}
+.slide[data-theme="brutal"] .mt3 {
+  margin-top: 60px;
+}
+.slide[data-theme="brutal"] .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.slide[data-theme="brutal"] .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 2.5px solid #17130f;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 3px 3px 0 #17130f;
+  font: 650 23px/1.1 var(--font-geist), sans-serif;
+  color: #17130f;
+}
+.slide[data-theme="brutal"] .split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 64px;
+  align-items: center;
+}
+.slide[data-theme="brutal"] .split.wl {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+}
+.slide[data-theme="brutal"] .split.wr {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+}
+.slide[data-theme="brutal"] .flow {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.slide[data-theme="brutal"] .flow > .box {
+  flex: 1;
+}
+.slide[data-theme="brutal"] .arw {
+  flex: none;
+  font: 800 48px/1 var(--font-bricolage), sans-serif;
+  color: #17130f;
+}
+.slide[data-theme="brutal"] .big {
+  font: 800 60px/1.04 var(--font-bricolage), sans-serif;
+  letter-spacing: -0.045em;
+  color: #17130f;
+}
+.slide[data-theme="brutal"] .quote {
+  font: 800 42px/1.15 var(--font-bricolage), sans-serif;
+  letter-spacing: -0.03em;
+}
+.slide[data-theme="brutal"] .note {
+  font-size: 22px;
+  color: var(--s-soft);
+}
+.slide[data-theme="brutal"] .window {
+  overflow: hidden;
+  padding: 0;
+}
+.slide[data-theme="brutal"] .window .bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-bottom: var(--b);
+  background: #fdf2cf;
+  font: 600 17px var(--font-geist-mono), monospace;
+}
+.slide[data-theme="brutal"] .window .bar i {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid #17130f;
+  border-radius: 50%;
+  background: #fff;
+}
+.slide[data-theme="brutal"] .window .bar span {
+  margin-left: 10px;
+}
+.slide[data-theme="brutal"] .window .body {
+  padding: 22px 24px;
+}
+.slide[data-theme="brutal"] .msg {
+  width: fit-content;
+  max-width: 82%;
+  margin-top: 14px;
+  padding: 14px 20px;
+  border: var(--b);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--sh-s);
+  font-size: 24px;
+  line-height: 1.35;
+}
+.slide[data-theme="brutal"] .msg.me {
+  margin-left: auto;
+  background: #17130f;
+  color: #fff;
+}
+.slide[data-theme="brutal"] .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 22px;
+  border: var(--b);
+  border-radius: 12px;
+  background: #ea6526;
+  box-shadow: var(--sh-s);
+  font: 700 21px var(--font-geist), sans-serif;
+  color: #fff;
+}
+.slide[data-theme="brutal"] .art {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  border-radius: 0;
+  object-fit: contain;
+}
+.slide[data-theme="brutal"] .level {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 30px 14px;
+  font: 700 20px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.12em;
+}
+.slide[data-theme="brutal"] .level b {
+  font: 800 120px/1 var(--font-bricolage), sans-serif;
+  letter-spacing: -0.05em;
+}
+.slide[data-theme="brutal"] svg.inline {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.slide[data-theme="brutal"] .box.xs {
+  padding: 13px 18px;
+  border-radius: 12px;
+  box-shadow: var(--sh-s);
+}
+.slide[data-theme="brutal"] .box.xs h3 {
+  font-size: 27px;
+}
+.slide[data-theme="brutal"] .box.xs p {
+  margin-top: 4px;
+  font-size: 20px;
+}
+.slide[data-theme="brutal"] .box.xl h3 {
+  font-size: 46px;
+  line-height: 1.02;
+}
+.slide[data-theme="brutal"] .arw.sm {
+  font-size: 32px;
+}
+.slide[data-theme="brutal"] .ico {
+  display: block;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 22px;
+}
+.slide[data-theme="brutal"] .row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.slide[data-theme="brutal"] .num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 2.5px solid #17130f;
+  border-radius: 10px;
+  background: #f6c244;
+  font: 800 23px/1 var(--font-bricolage), sans-serif;
+  color: #17130f;
+}
+.slide[data-theme="brutal"] .stairs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+  align-items: start;
+}
+.slide[data-theme="brutal"] pre.tree {
+  margin: 0;
+  padding: 34px 40px;
+  background: #17130f !important;
+  color: #f5efe6;
+  font-size: 27px;
+  line-height: 1.6;
+}
+.slide[data-theme="brutal"] pre.tree b {
+  color: #f6c244;
+  font-weight: 600;
+}
+.slide[data-theme="brutal"] pre.tree i {
+  font-style: normal;
+  color: #aaa093;
+}
+
 /* ── Chrome (logos, event, page number) ─────────────────────── */
 .slide-chrome {
   position: absolute;
