@@ -153,7 +153,7 @@ function Outcomes({ w }: { w: Workshop }) {
             eyebrow="What you'll learn"
             title={
               <>
-                From prompt to <Accent className="text-ember-600">autonomous agent.</Accent>
+                From roadmap to a <Accent className="text-ember-600">working product.</Accent>
               </>
             }
             description={w.audience}
@@ -182,10 +182,10 @@ function Agenda({ w }: { w: Workshop }) {
           eyebrow="Agenda"
           title={
             <>
-              Six parts. <Accent className="text-ember-600">One working agent.</Accent>
+              Six parts. <Accent className="text-ember-600">One real product.</Accent>
             </>
           }
-          description="Every part ends with something you can run — concepts arrive exactly when you need them."
+          description="From the career roadmap to a chatbot built live, the way real teams plan, build and improve."
         />
         <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {w.agenda.map((item, i) => (
